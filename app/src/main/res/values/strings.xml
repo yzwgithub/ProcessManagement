@@ -11,4 +11,7 @@
     <string name="menu_notifications">项目1</string>
     <string name="item_01">项目2</string>
     <string name="item_02">项目3</string>
+    <string name="user">用户详细信息</string>
+    <string name="name">姓名</string>
+    <string name="job">职务</string>
 </resources>

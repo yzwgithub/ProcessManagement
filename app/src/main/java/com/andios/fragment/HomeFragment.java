@@ -2,7 +2,7 @@ package com.andios.fragment;
 import android.os.Bundle;
 
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -27,7 +27,6 @@ public class HomeFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         initToolBar();
-
     }
     private void initToolBar(){
         Toolbar toolbar= (Toolbar) getView().findViewById(R.id.tb_toolbar);

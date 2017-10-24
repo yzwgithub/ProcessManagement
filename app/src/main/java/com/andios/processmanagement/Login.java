@@ -39,11 +39,14 @@ public class Login extends AppCompatActivity {
         public void onClick(View view) {
             switch (view.getId()){
                 case R.id.login_enter_username:
+                    break;
                 case R.id.login_enter_password:
+                    break;
                 case R.id.login_button:
                     pageRedirect(Login.this,MainActivity.class);
                     break;
                 case R.id.forget_password:
+                    break;
                 case R.id.register:
                     pageRedirect(Login.this,Register.class);
                     break;

@@ -83,8 +83,8 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationB
         bottomNavigationBar.setMode(BottomNavigationBar.MODE_DEFAULT);
         bottomNavigationBar.setBackgroundStyle(BottomNavigationBar.BACKGROUND_STYLE_DEFAULT);
         bottomNavigationBar.addItem(new BottomNavigationItem(R.mipmap.ic_tab_home,"HOME")).setActiveColor("#ECECEC")
-                .addItem(new BottomNavigationItem(R.mipmap.ic_user_center,"MINE")).setActiveColor("#ECECEC")
-                .addItem(new BottomNavigationItem(R.mipmap.ic_category,"DISC")).setActiveColor("#ECECEC")
+                .addItem(new BottomNavigationItem(R.mipmap.ic_category,"MINE")).setActiveColor("#ECECEC")
+                .addItem(new BottomNavigationItem(R.mipmap.ic_user_center,"DISC")).setActiveColor("#ECECEC")
                 .setFirstSelectedPosition(0)
                 .initialise();
         bottomNavigationBar.setTabSelectedListener(this);//注册监听事件
