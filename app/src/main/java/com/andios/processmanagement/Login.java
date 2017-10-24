@@ -41,10 +41,12 @@ public class Login extends AppCompatActivity {
                 case R.id.login_enter_username:
                 case R.id.login_enter_password:
                 case R.id.login_button:
-                    pageRedirect(Login.this,Register.class);
+                    pageRedirect(Login.this,MainActivity.class);
                     break;
                 case R.id.forget_password:
                 case R.id.register:
+                    pageRedirect(Login.this,Register.class);
+                    break;
             }
         }
     }

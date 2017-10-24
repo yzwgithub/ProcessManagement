@@ -1,4 +1,4 @@
-package com.andios.util;
+package com.andios.processmanagement;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,9 +8,6 @@ import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
-
-import com.andios.processmanagement.Login;
-import com.andios.processmanagement.R;
 
 /**
  * Created by ASUS on 2017/10/23.
