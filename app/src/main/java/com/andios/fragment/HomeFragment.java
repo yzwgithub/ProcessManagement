@@ -3,13 +3,18 @@ import android.os.Bundle;
 
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.andios.processmanagement.R;
+import com.andios.adapter.RecyclerViewAdapter;
+import com.andios.activity.R;
 
 
 /**
@@ -17,6 +22,8 @@ import com.andios.processmanagement.R;
  */
 
 public class HomeFragment extends Fragment {
+    private RecyclerViewAdapter adapter;
+    private String[] text;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -27,6 +34,22 @@ public class HomeFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         initToolBar();
+        initData();
+        initRecyclerView();
+    }
+    private void initData(){
+        text=new String[20];
+        for(int i=0;i<20;i++){
+            text[i]="Text"+i;
+        }
+    }
+    private void initRecyclerView(){
+        RecyclerView recyclerView= (RecyclerView) getView().findViewById(R.id.recyclerview);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
+        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        recyclerView.setLayoutManager(new StaggeredGridLayoutManager(1,StaggeredGridLayoutManager.VERTICAL));
+        recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(),1));
+        recyclerView.setAdapter(adapter=new RecyclerViewAdapter(getActivity(),text));
     }
     private void initToolBar(){
         Toolbar toolbar= (Toolbar) getView().findViewById(R.id.tb_toolbar);

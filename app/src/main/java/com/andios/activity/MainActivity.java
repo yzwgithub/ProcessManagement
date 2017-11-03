@@ -1,4 +1,4 @@
-package com.andios.processmanagement;
+package com.andios.activity;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;

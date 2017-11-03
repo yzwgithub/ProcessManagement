@@ -1,4 +1,4 @@
-package com.andios.processmanagement;
+package com.andios.activity;
 
 import org.junit.Test;
 

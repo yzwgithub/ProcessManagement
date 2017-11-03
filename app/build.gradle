@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 25
-    buildToolsVersion "25.0.3"
+    buildToolsVersion '26.0.2'
     defaultConfig {
         applicationId "com.andios.processmanagement"
         minSdkVersion 21
@@ -29,4 +29,5 @@ dependencies {
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.ashokvarma.android:bottom-navigation-bar:1.2.0'
     testCompile 'junit:junit:4.12'
+    compile files('lib/universal-image-loader-1.9.2-with-sources.jar')
 }

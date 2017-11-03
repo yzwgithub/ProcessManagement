@@ -7,7 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.andios.processmanagement.R;
+import com.andios.activity.R;
 
 /**
  * Created by ASUS on 2017/6/13.
