@@ -27,7 +27,8 @@ import static android.app.Activity.RESULT_OK;
  * Created by ASUS on 2017/6/13.
  */
 
-public class DiscoverFragment extends Fragment implements View.OnClickListener{
+public class DiscoverFragment extends Fragment implements View.OnClickListener {
+
     // 拍照
     private final int REQ_CODE_CAMERA = 21;
     // 相册
@@ -41,17 +42,20 @@ public class DiscoverFragment extends Fragment implements View.OnClickListener{
     private SettingDialog setDialog;
     private List<String> imgList;
     private Uri imgUrl;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view=inflater.inflate(R.layout.activity_feedback,container,false);
+        View view = inflater.inflate(R.layout.activity_feedback, container, false);
         return view;
     }
+
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         initView();
         super.onActivityCreated(savedInstanceState);
     }
+
     private void initView() {
         imgFbackAdd = (ImageView)getView().findViewById(R.id.img_fback_add);
         gvFbackImg = (GridView) getView().findViewById(R.id.gv_fback_img);
@@ -62,6 +66,7 @@ public class DiscoverFragment extends Fragment implements View.OnClickListener{
         imgList = new ArrayList<String>();
         gvFbackImg.setEnabled(false);
     }
+
     @Override
     public void onClick(View v) {
         switch(v.getId()){
@@ -84,6 +89,7 @@ public class DiscoverFragment extends Fragment implements View.OnClickListener{
                 break;
         }
     }
+
     private void setListViewAdapter(){
         if(adapter == null){
             if(imgList != null){
@@ -101,6 +107,7 @@ public class DiscoverFragment extends Fragment implements View.OnClickListener{
             adapter.notifyDataSetChanged();
         }
     }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {

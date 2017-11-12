@@ -1,4 +1,5 @@
 package com.andios.fragment;
+import android.content.Intent;
 import android.os.Bundle;
 
 import android.support.annotation.Nullable;
@@ -13,8 +14,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.andios.activity.ActivityDetail;
 import com.andios.adapter.RecyclerViewAdapter;
 import com.andios.activity.R;
+import com.andios.interfaces.OnItemClickListener;
 
 
 /**
@@ -36,6 +39,13 @@ public class HomeFragment extends Fragment {
         initToolBar();
         initData();
         initRecyclerView();
+        adapter.setOnItemClickListener(new OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                Intent intent=new Intent(getActivity(), ActivityDetail.class);
+                startActivity(intent);
+            }
+        });
     }
     private void initData(){
         text=new String[20];
