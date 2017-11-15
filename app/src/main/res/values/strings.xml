@@ -18,4 +18,5 @@
     <string name="enter_work">请填写项目名称</string>
     <string name="sign">每日签到</string>
     <string name="go">签到</string>
+    <string name="getLocal">获取当前位置地址</string>
 </resources>
