@@ -12,66 +12,107 @@
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginRight="10dp">
-
+        android:layout_height="wrap_content">
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/clock"
+            android:scaleType="fitXY" />
+        <Spinner
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:entries="@array/spingarr"/>
+    </LinearLayout>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/name"
+            android:scaleType="fitXY" />
         <TextView
+            android:layout_marginLeft="10dp"
             android:layout_weight="1"
-            android:id="@+id/local"
+            android:layout_width="0dp"
+            android:textSize="20sp"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:text="@string/work"/>
+    </LinearLayout>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:contentDescription="@string/work"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/clock"
+            android:scaleType="fitXY" />
+        <TextView
+            android:layout_marginLeft="10dp"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:textSize="20sp"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:text="@string/getImg"/>
+    </LinearLayout>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/time"
+            android:scaleType="fitXY" />
+        <TextView
+            android:layout_marginLeft="10dp"
+            android:layout_weight="1"
             android:layout_width="0dp"
             android:textSize="20dp"
             android:layout_height="match_parent"
             android:gravity="center_vertical"
-            android:text="@string/getLocal"/>
-        <ImageView
-
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:src="@drawable/map"/>
+            android:text="获取当前时间"/>
     </LinearLayout>
     <LinearLayout
+        android:id="@+id/img_fback_add"
+        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:orientation="vertical"
-        android:paddingBottom="12dp"
-        android:paddingTop="12dp" >
-        <LinearLayout
-            android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:layout_width="50dp"
             android:layout_height="50dp"
-            android:orientation="horizontal"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp" >
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="50dp"
-                android:layout_marginRight="10dp"
-                android:layout_weight="1"
-                android:descendantFocusability="blocksDescendants"
-                android:gravity="right"                
-                    android:layout_gravity="right" >
-                <GridView 
-                    android:id="@+id/gv_fback_img"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:scrollbars="none"
-                    android:gravity="right"                    
-                    android:layout_gravity="right"
-                    android:numColumns="3"/>
-            </LinearLayout>
-            <ImageView
-                android:id="@+id/img_fback_add"
-                android:layout_width="60dp"
-                android:layout_height="40dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginTop="10dp"
-                android:src="@drawable/add_fback_img"
-                android:scaleType="fitXY" />
-        </LinearLayout>
+            android:src="@drawable/camera"
+            android:scaleType="fitXY" />
+        <TextView
+            android:layout_marginLeft="10dp"
+            android:layout_weight="1"
+            android:id="@+id/camera"
+            android:layout_width="0dp"
+            android:textSize="20dp"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:text="@string/getImg"/>
     </LinearLayout>
-    <LinearLayout
+    <GridView
+        android:id="@+id/gv_fback_img"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_marginTop="10dp" >
-    </LinearLayout>
-
+        android:scrollbars="none"
+        android:gravity="right"
+        android:layout_gravity="right"
+        android:numColumns="3"/>
+    <Button
+        android:background="@drawable/shap"
+        android:layout_marginTop="40dp"
+        android:id="@+id/go_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:text="@string/go"/>
 </LinearLayout>

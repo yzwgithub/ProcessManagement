@@ -6,13 +6,17 @@
     android:clickable="true"
     android:focusable="true">
         <com.andios.widget.RoundImageView
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="5dp"
             android:id="@+id/img"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:src="@drawable/img"/>
         <TextView
+            android:layout_marginLeft="10dp"
             android:id="@+id/card"
             android:textSize="15dp"
+            android:gravity="center_vertical"
             android:layout_width="match_parent"
-            android:layout_height="50dp"/>
+            android:layout_height="60dp"/>
 </LinearLayout>

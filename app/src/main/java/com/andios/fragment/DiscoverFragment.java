@@ -9,7 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
-import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.andios.adapter.FeedBackAdapter;
@@ -35,14 +35,13 @@ public class DiscoverFragment extends Fragment implements View.OnClickListener {
     private final int REQ_CODE_PICTURE = 22;
     // 裁图
     private final int REQ_CODE_CUT = 23;
-
-    private ImageView imgFbackAdd;
+    private LinearLayout imgFbackAdd;
     private GridView gvFbackImg;
     private FeedBackAdapter adapter;
     private SettingDialog setDialog;
     private List<String> imgList;
     private Uri imgUrl;
-
+    private String []text;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -52,21 +51,20 @@ public class DiscoverFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        initView();
         super.onActivityCreated(savedInstanceState);
+        initView();
     }
 
     private void initView() {
-        imgFbackAdd = (ImageView)getView().findViewById(R.id.img_fback_add);
+        imgFbackAdd = (LinearLayout) getView().findViewById(R.id.img_fback_add);
         gvFbackImg = (GridView) getView().findViewById(R.id.gv_fback_img);
         setDialog = new SettingDialog(getActivity(), R.style.setting_dialog_style);
         setDialog.bt1.setOnClickListener(this);
         setDialog.bt2.setOnClickListener(this);
         imgFbackAdd.setOnClickListener(this);
-        imgList = new ArrayList<String>();
+        imgList = new ArrayList<>();
         gvFbackImg.setEnabled(false);
     }
-
     @Override
     public void onClick(View v) {
         switch(v.getId()){

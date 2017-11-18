@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:textColor="#FFFFFF"
         android:text="@string/login"
-        android:textSize="20dp"
+        android:textSize="20sp"
         android:gravity="center"/>
     <com.andios.widget.RoundImageView
         android:layout_marginTop="20dp"
@@ -34,6 +34,7 @@
         android:layout_height="wrap_content"
         android:textColorHint="#FFFFFF"
         android:textColor="#FFFFFF"
+        android:inputType="textPassword"
         android:hint="@string/enter_password"/>
     <Button
         android:background="@drawable/shap"
@@ -51,20 +52,19 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
+        <CheckBox
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/JiZhu"
+            android:textColor="#FFFFFF"/>
         <TextView
             android:id="@+id/forget_password"
             android:layout_weight="1"
             android:layout_width="0dp"
             android:textColor="#FFFFFF"
             android:layout_height="wrap_content"
-            android:text="@string/forget_password"/>
-        <TextView
-            android:id="@+id/register"
-            android:layout_weight="1"
-            android:layout_width="0dp"
-            android:textColor="#FFFFFF"
-            android:layout_height="wrap_content"
-            android:text="@string/register"
+            android:text="@string/forget_password"
             android:gravity="end"/>
     </LinearLayout>
 </LinearLayout>

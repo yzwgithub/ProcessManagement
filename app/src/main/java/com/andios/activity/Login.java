@@ -13,7 +13,7 @@ import android.widget.TextView;
 public class Login extends AppCompatActivity {
     private EditText enter_username,enter_password;
     private Button login_button;
-    private TextView forget_password,register;
+    private TextView forget_password;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -21,20 +21,18 @@ public class Login extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.login);
         initView();
-        enter_username.setOnClickListener(new onClick());
-        enter_password.setOnClickListener(new onClick());
-        login_button.setOnClickListener(new onClick());
-        forget_password.setOnClickListener(new onClick());
-        register.setOnClickListener(new onClick());
+        enter_username.setOnClickListener(new onClickListener());
+        enter_password.setOnClickListener(new onClickListener());
+        login_button.setOnClickListener(new onClickListener());
+        forget_password.setOnClickListener(new onClickListener());
     }
     private void initView(){
         enter_username= (EditText) findViewById(R.id.login_enter_username);
         enter_password= (EditText) findViewById(R.id.login_enter_password);
         login_button= (Button) findViewById(R.id.login_button);
         forget_password= (TextView) findViewById(R.id.forget_password);
-        register= (TextView) findViewById(R.id.register);
     }
-    class onClick implements View.OnClickListener{
+    class onClickListener implements View.OnClickListener{
         @Override
         public void onClick(View view) {
             switch (view.getId()){
@@ -46,9 +44,6 @@ public class Login extends AppCompatActivity {
                     pageRedirect(Login.this,MainActivity.class);
                     break;
                 case R.id.forget_password:
-                    break;
-                case R.id.register:
-                    pageRedirect(Login.this,Register.class);
                     break;
             }
         }
