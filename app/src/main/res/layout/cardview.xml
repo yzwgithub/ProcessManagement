@@ -5,7 +5,7 @@
     android:background="?android:attr/selectableItemBackground"
     android:clickable="true"
     android:focusable="true">
-        <com.andios.widget.RoundImageView
+        <com.andios.widget.CircleImageView
             android:layout_marginLeft="5dp"
             android:layout_marginTop="5dp"
             android:id="@+id/img"
