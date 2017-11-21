@@ -3,9 +3,6 @@ apply plugin: 'com.android.application'
 android {
     signingConfigs {
         config {
-            keyPassword 'yang1997'
-            storeFile file('D:/AndroidStudioDemo/KeyStore/ProcessManagement.jks')
-            storePassword 'yang1997'
         }
     }
     compileSdkVersion 25
