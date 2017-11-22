@@ -74,6 +74,7 @@
             android:src="@drawable/time"
             android:scaleType="fitXY" />
         <TextView
+            android:id="@+id/textTime"
             android:layout_marginLeft="10dp"
             android:layout_weight="1"
             android:layout_width="0dp"

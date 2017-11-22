@@ -21,6 +21,8 @@ public class History extends SQLiteOpenHelper {
                 HistoryHelper.ID+
                 " INTEGER primary key autoincrement,"+
                 HistoryHelper.PROJECT_NANE+" text,"+
+                HistoryHelper.IsGoToWork+" text,"+
+                HistoryHelper.Local+" text,"+
                 HistoryHelper.TIME+" text,"+
                 HistoryHelper.DETAILS+
                 " text);";

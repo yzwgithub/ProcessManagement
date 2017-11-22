@@ -25,7 +25,9 @@ import com.andios.dao.DataOperate;
 import com.andios.util.CameraUtil;
 import com.andios.widget.SettingDialog;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import static android.app.Activity.RESULT_OK;
@@ -49,7 +51,8 @@ public class DiscoverFragment extends Fragment implements View.OnClickListener {
     private SettingDialog setDialog;
     private List<String> imgList;
     private Uri imgUrl;
-    private TextView textLocal;
+    private Spinner spinner;
+    private TextView textLocal,textTime;
     private EditText textWork;
     private Button button;
     private Cursor cursor;
@@ -73,8 +76,10 @@ public class DiscoverFragment extends Fragment implements View.OnClickListener {
     }
 
     private void initView() {
+        spinner= (Spinner) getView().findViewById(R.id.spinner);
         textLocal= (TextView) getView().findViewById(R.id.getLocal);
         textWork= (EditText) getView().findViewById(R.id.work);
+        textTime= (TextView) getView().findViewById(R.id.textTime);
         button= (Button) getView().findViewById(R.id.go_button);
         imgFbackAdd = (LinearLayout) getView().findViewById(R.id.img_fback_add);
         gvFbackImg = (GridView) getView().findViewById(R.id.gv_fback_img);
@@ -83,6 +88,7 @@ public class DiscoverFragment extends Fragment implements View.OnClickListener {
         setDialog.bt2.setOnClickListener(this);
         imgFbackAdd.setOnClickListener(this);
         textLocal.setOnClickListener(this);
+        textTime.setOnClickListener(this);
         button.setOnClickListener(this);
         textWork.setOnClickListener(this);
         imgList = new ArrayList<>();
@@ -112,12 +118,20 @@ public class DiscoverFragment extends Fragment implements View.OnClickListener {
                 Intent intent=new Intent(getActivity(), MapActivity.class);
                 startActivity(intent);
                 break;
+            case R.id.textTime:
+                long time=System.currentTimeMillis();
+                Date date=new Date(time);
+                SimpleDateFormat format=new SimpleDateFormat("yyyy年MM月dd日 HH:mm:ss EEE");
+                textTime.setText(format.format(date));
+                break;
             case R.id.go_button:
                 cursor=dataOperate.select(getActivity());
                 int id=cursor.getCount()+1;
+                String isWork=spinner.getSelectedItem().toString();
                 String work=textWork.getText().toString();
+                String textDate=textTime.getText().toString();
                 String local=textLocal.getText().toString();
-                dataOperate.insert(getActivity(),id,work,local,"asdfg");
+                dataOperate.insert(getActivity(),id,isWork,work,textDate,local,null);
                 Toast.makeText(getActivity(),"数据插入成功",Toast.LENGTH_SHORT).show();
                 break;
         }
