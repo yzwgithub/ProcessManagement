@@ -1,6 +1,7 @@
 package com.andios.fragment;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -8,14 +9,19 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.andios.activity.MapActivity;
 import com.andios.adapter.FeedBackAdapter;
 import com.andios.activity.R;
+import com.andios.dao.DataOperate;
 import com.andios.util.CameraUtil;
 import com.andios.widget.SettingDialog;
 
@@ -30,7 +36,7 @@ import static android.app.Activity.RESULT_OK;
  */
 
 public class DiscoverFragment extends Fragment implements View.OnClickListener {
-
+    DataOperate dataOperate=new DataOperate();
     // 拍照
     private final int REQ_CODE_CAMERA = 21;
     // 相册
@@ -43,7 +49,16 @@ public class DiscoverFragment extends Fragment implements View.OnClickListener {
     private SettingDialog setDialog;
     private List<String> imgList;
     private Uri imgUrl;
-    private TextView textView;
+    private TextView textLocal;
+    private EditText textWork;
+    private Button button;
+    private Cursor cursor;
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -58,14 +73,18 @@ public class DiscoverFragment extends Fragment implements View.OnClickListener {
     }
 
     private void initView() {
-        textView= (TextView) getView().findViewById(R.id.getLocal);
+        textLocal= (TextView) getView().findViewById(R.id.getLocal);
+        textWork= (EditText) getView().findViewById(R.id.work);
+        button= (Button) getView().findViewById(R.id.go_button);
         imgFbackAdd = (LinearLayout) getView().findViewById(R.id.img_fback_add);
         gvFbackImg = (GridView) getView().findViewById(R.id.gv_fback_img);
         setDialog = new SettingDialog(getActivity(), R.style.setting_dialog_style);
         setDialog.bt1.setOnClickListener(this);
         setDialog.bt2.setOnClickListener(this);
         imgFbackAdd.setOnClickListener(this);
-        textView.setOnClickListener(this);
+        textLocal.setOnClickListener(this);
+        button.setOnClickListener(this);
+        textWork.setOnClickListener(this);
         imgList = new ArrayList<>();
         gvFbackImg.setEnabled(false);
     }
@@ -92,6 +111,15 @@ public class DiscoverFragment extends Fragment implements View.OnClickListener {
             case R.id.getLocal:
                 Intent intent=new Intent(getActivity(), MapActivity.class);
                 startActivity(intent);
+                break;
+            case R.id.go_button:
+                cursor=dataOperate.select(getActivity());
+                int id=cursor.getCount()+1;
+                String work=textWork.getText().toString();
+                String local=textLocal.getText().toString();
+                dataOperate.insert(getActivity(),id,work,local,"asdfg");
+                Toast.makeText(getActivity(),"数据插入成功",Toast.LENGTH_SHORT).show();
+                break;
         }
     }
 
@@ -116,7 +144,6 @@ public class DiscoverFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {
-
             switch (requestCode) {
                 case REQ_CODE_CAMERA:
                     if(data != null){

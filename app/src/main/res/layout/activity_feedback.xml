@@ -19,6 +19,7 @@
             android:src="@drawable/clock"
             android:scaleType="fitXY" />
         <Spinner
+            android:id="@+id/spinner"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:entries="@array/spingarr"/>
@@ -32,21 +33,23 @@
             android:layout_height="50dp"
             android:src="@drawable/name"
             android:scaleType="fitXY" />
-        <TextView
+        <EditText
+            android:id="@+id/work"
+            android:background="@null"
+            style="?android:attr/textViewStyle"
             android:layout_marginLeft="10dp"
             android:layout_weight="1"
             android:layout_width="0dp"
             android:textSize="20sp"
             android:layout_height="match_parent"
             android:gravity="center_vertical"
-            android:text="@string/work"/>
+            android:hint="@string/work"/>
     </LinearLayout>
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <ImageView
-            android:contentDescription="@string/work"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:src="@drawable/clock"

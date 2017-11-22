@@ -1,5 +1,6 @@
 package com.andios.fragment;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 
 import android.support.annotation.Nullable;
@@ -13,10 +14,11 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-
 import com.andios.activity.ActivityDetail;
 import com.andios.adapter.RecyclerViewAdapter;
 import com.andios.activity.R;
+import com.andios.dao.DataOperate;
+import com.andios.dao.HistoryHelper;
 import com.andios.interfaces.OnItemClickListener;
 
 
@@ -26,7 +28,13 @@ import com.andios.interfaces.OnItemClickListener;
 
 public class HomeFragment extends Fragment {
     private RecyclerViewAdapter adapter;
+    private Cursor cursor;
+    DataOperate dataOperate=new DataOperate();
     private String[] text;
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+    }
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -47,10 +55,14 @@ public class HomeFragment extends Fragment {
             }
         });
     }
+
     private void initData(){
-        text=new String[20];
-        for(int i=0;i<20;i++){
-            text[i]="Text"+i;
+        cursor=dataOperate.select(getContext());
+        text=new String[cursor.getCount()];
+        int i=0;
+        while (cursor.moveToNext()){
+            text[i]=cursor.getString(cursor.getColumnIndex(HistoryHelper.PROJECT_NANE));
+            i++;
         }
     }
     private void initRecyclerView(){
@@ -86,4 +98,5 @@ public class HomeFragment extends Fragment {
             }
         });
     }
+
 }

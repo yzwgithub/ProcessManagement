@@ -1,16 +1,20 @@
 package com.andios.adapter;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.andios.activity.R;
+import com.andios.dao.HistoryHelper;
 import com.andios.interfaces.OnItemClickListener;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 
 /**
