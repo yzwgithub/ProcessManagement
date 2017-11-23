@@ -52,6 +52,27 @@
         <ImageView
             android:layout_width="50dp"
             android:layout_height="50dp"
+            android:src="@drawable/name"
+            android:scaleType="fitXY" />
+        <EditText
+            android:id="@+id/project_details"
+            android:background="@null"
+            style="?android:attr/textViewStyle"
+            android:layout_marginLeft="10dp"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:textSize="20sp"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:hint="@string/project_details"/>
+    </LinearLayout>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:src="@drawable/clock"
             android:scaleType="fitXY" />
         <TextView

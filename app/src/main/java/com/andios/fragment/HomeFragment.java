@@ -30,7 +30,7 @@ public class HomeFragment extends Fragment {
     private RecyclerViewAdapter adapter;
     private Cursor cursor;
     DataOperate dataOperate=new DataOperate();
-    private String[] text;
+    private String[] text,time,details;
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
@@ -59,9 +59,13 @@ public class HomeFragment extends Fragment {
     private void initData(){
         cursor=dataOperate.select(getContext());
         text=new String[cursor.getCount()];
+        time=new String[cursor.getCount()];
+        details=new String[cursor.getCount()];
         int i=0;
         while (cursor.moveToNext()){
             text[i]=cursor.getString(cursor.getColumnIndex(HistoryHelper.PROJECT_NANE));
+            time[i]=cursor.getString(cursor.getColumnIndex(HistoryHelper.TIME));
+            details[i]=cursor.getString(cursor.getColumnIndex(HistoryHelper.DETAILS));
             i++;
         }
     }
@@ -71,7 +75,7 @@ public class HomeFragment extends Fragment {
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(new StaggeredGridLayoutManager(1,StaggeredGridLayoutManager.VERTICAL));
         recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(),1));
-        recyclerView.setAdapter(adapter=new RecyclerViewAdapter(getActivity(),text));
+        recyclerView.setAdapter(adapter=new RecyclerViewAdapter(getActivity(),text,time,details));
     }
     private void initToolBar(){
         Toolbar toolbar= (Toolbar) getView().findViewById(R.id.tb_toolbar);

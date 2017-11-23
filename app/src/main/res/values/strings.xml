@@ -25,5 +25,6 @@
     <string name="ZhiCheng">职称</string>
     <string name="Bumen">部门</string>
     <string name="ProjectName">获取项目名称</string>
-    <string name="ProjectTime">获取项目名称</string>
+    <string name="ProjectTime">获取项目时间</string>
+    <string name="project_details">获取项目描述</string>
 </resources>

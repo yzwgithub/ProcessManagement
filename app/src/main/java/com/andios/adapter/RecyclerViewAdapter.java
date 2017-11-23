@@ -23,11 +23,13 @@ import java.util.HashMap;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.MyViewHolder> {
     private LayoutInflater inflater;
-    private String[] text;
+    private String[] text,string_time,string_details;
     private OnItemClickListener listener;
-    public RecyclerViewAdapter(Context context,String[] text) {
+    public RecyclerViewAdapter(Context context,String[] text,String[]string_time,String []string_details) {
         inflater=LayoutInflater.from(context);
         this.text=text;
+        this.string_time=string_time;
+        this.string_details=string_details;
     }
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -40,6 +42,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
         //holder.imageview.setImageBitmap();
         holder.textview.setText(text[position]);
+        holder.time.setText(string_time[position]);
+        holder.details.setText(string_details[position]);
     }
 
     @Override
@@ -48,11 +52,13 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
-        private TextView textview;
+        private TextView textview,time,details;
         private ImageView imageview;
         public MyViewHolder(View itemView) {
             super(itemView);
-            textview= (TextView) itemView.findViewById(R.id.card);
+            textview= (TextView) itemView.findViewById(R.id.project_name);
+            time= (TextView) itemView.findViewById(R.id.time);
+            details= (TextView) itemView.findViewById(R.id.details);
             imageview= (ImageView) itemView.findViewById(R.id.img);
             itemView.setOnClickListener(this);
         }

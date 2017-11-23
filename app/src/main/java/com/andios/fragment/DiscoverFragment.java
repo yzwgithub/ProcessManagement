@@ -9,7 +9,6 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
@@ -53,7 +52,7 @@ public class DiscoverFragment extends Fragment implements View.OnClickListener {
     private Uri imgUrl;
     private Spinner spinner;
     private TextView textLocal,textTime;
-    private EditText textWork;
+    private EditText textWork,project_details;
     private Button button;
     private Cursor cursor;
 
@@ -79,6 +78,7 @@ public class DiscoverFragment extends Fragment implements View.OnClickListener {
         spinner= (Spinner) getView().findViewById(R.id.spinner);
         textLocal= (TextView) getView().findViewById(R.id.getLocal);
         textWork= (EditText) getView().findViewById(R.id.work);
+        project_details= (EditText) getView().findViewById(R.id.project_details);
         textTime= (TextView) getView().findViewById(R.id.textTime);
         button= (Button) getView().findViewById(R.id.go_button);
         imgFbackAdd = (LinearLayout) getView().findViewById(R.id.img_fback_add);
@@ -121,7 +121,7 @@ public class DiscoverFragment extends Fragment implements View.OnClickListener {
             case R.id.textTime:
                 long time=System.currentTimeMillis();
                 Date date=new Date(time);
-                SimpleDateFormat format=new SimpleDateFormat("yyyy年MM月dd日 HH:mm:ss EEE");
+                SimpleDateFormat format=new SimpleDateFormat("yyyy年MM月dd日 HH:mm");
                 textTime.setText(format.format(date));
                 break;
             case R.id.go_button:
@@ -130,13 +130,13 @@ public class DiscoverFragment extends Fragment implements View.OnClickListener {
                 String isWork=spinner.getSelectedItem().toString();
                 String work=textWork.getText().toString();
                 String textDate=textTime.getText().toString();
+                String details=project_details.getText().toString();
                 String local=textLocal.getText().toString();
-                dataOperate.insert(getActivity(),id,isWork,work,textDate,local,null);
-                Toast.makeText(getActivity(),"数据插入成功",Toast.LENGTH_SHORT).show();
+                dataOperate.insert(getActivity(),id,isWork,work,local,textDate,details);
+                Toast.makeText(getActivity(),"签到成功！",Toast.LENGTH_SHORT).show();
                 break;
         }
     }
-
     private void setListViewAdapter(){
         if(adapter == null){
             if(imgList != null){
