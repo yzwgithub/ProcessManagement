@@ -69,9 +69,9 @@ public class Login extends AppCompatActivity {
         Map<String,String>data=sharedHelper.read();
         enter_username.setText(data.get("username"));
         enter_password.setText(data.get("password"));
-        if (data!=null){
-            checkBox1.setChecked(true);
-        }
+        if (data.get("username")==null||data.get("password")==null){
+            checkBox1.setChecked(false);
+        }else checkBox1.setChecked(true);
     }
     private void pageRedirect(Context context, Class<?>newClass){
         Intent intent=new Intent(context,newClass);

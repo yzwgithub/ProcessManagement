@@ -44,6 +44,12 @@
             android:layout_height="match_parent"
             android:gravity="center_vertical"
             android:hint="@string/work"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text=" * "
+            android:textColor="#FF0000"/>
     </LinearLayout>
     <LinearLayout
         android:orientation="horizontal"
@@ -65,6 +71,12 @@
             android:layout_height="match_parent"
             android:gravity="center_vertical"
             android:hint="@string/project_details"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text=" * "
+            android:textColor="#FF0000"/>
     </LinearLayout>
     <LinearLayout
         android:orientation="horizontal"
@@ -84,6 +96,12 @@
             android:layout_height="match_parent"
             android:gravity="center_vertical"
             android:text="@string/getLocal"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text=" * "
+            android:textColor="#FF0000"/>
     </LinearLayout>
     <LinearLayout
         android:orientation="horizontal"
@@ -103,6 +121,12 @@
             android:layout_height="match_parent"
             android:gravity="center_vertical"
             android:text="获取当前时间"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text=" * "
+            android:textColor="#FF0000"/>
     </LinearLayout>
     <LinearLayout
         android:id="@+id/img_fback_add"

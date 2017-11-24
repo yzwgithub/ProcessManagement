@@ -132,8 +132,26 @@ public class DiscoverFragment extends Fragment implements View.OnClickListener {
                 String textDate=textTime.getText().toString();
                 String details=project_details.getText().toString();
                 String local=textLocal.getText().toString();
-                dataOperate.insert(getActivity(),id,isWork,work,local,textDate,details);
-                Toast.makeText(getActivity(),"签到成功！",Toast.LENGTH_SHORT).show();
+                if (work.equals("")){
+                    Toast.makeText(getContext(),"项目名称不能为空",Toast.LENGTH_SHORT).show();
+                    break;
+                }
+                if (details.equals("")){
+                    Toast.makeText(getContext(),"项目描述不能为空",Toast.LENGTH_SHORT).show();
+                    break;
+                }
+//                if (local.equals("获取当前位置")){
+//                    Toast.makeText(getContext(),"当前位置不能为空",Toast.LENGTH_SHORT).show();
+//                    break;
+//                }
+                if (textDate.equals("获取当前时间")){
+                    Toast.makeText(getContext(),"当前时间不能为空",Toast.LENGTH_SHORT).show();
+                    break;
+                }
+                if (!work.equals("")&&!textDate.equals("获取当前时间")&&!details.equals("")/*&&!local.equals("获取当前位置")*/){
+                    dataOperate.insert(getActivity(),id,isWork,work,local,textDate,details);
+                    Toast.makeText(getActivity(),"签到成功！",Toast.LENGTH_SHORT).show();
+                }
                 break;
         }
     }
