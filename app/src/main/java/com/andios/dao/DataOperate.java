@@ -17,7 +17,7 @@ public class DataOperate {
         ContentValues cv=new ContentValues();
         cv.put(HistoryHelper.ID,id);
         cv.put(HistoryHelper.IsGoToWork,iswork);
-        cv.put(HistoryHelper.PROJECT_NANE,project_name);
+        cv.put(HistoryHelper.PROJECT_NAME,project_name);
         cv.put(HistoryHelper.Local,local);
         cv.put(HistoryHelper.TIME,date);
         cv.put(HistoryHelper.DETAILS,details);
@@ -28,5 +28,12 @@ public class DataOperate {
         SQLiteDatabase sqLiteDatabase=history.getWritableDatabase();
         Cursor cursor=sqLiteDatabase.query(HistoryHelper.TABLE_NAME,null,null,null,null,null,null);
         return cursor;
+    }
+    public void delete(Context context,int position){
+        History history=new History(context);
+        SQLiteDatabase sqLiteDatabase=history.getWritableDatabase();
+        String where =HistoryHelper.ID+ " = ?";
+        String[] whereValue ={ Integer.toString(position) };
+        sqLiteDatabase.delete(HistoryHelper.TABLE_NAME,where,whereValue);
     }
 }

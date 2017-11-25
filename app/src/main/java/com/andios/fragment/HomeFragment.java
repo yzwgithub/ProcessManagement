@@ -1,4 +1,6 @@
 package com.andios.fragment;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -14,12 +16,14 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+
 import com.andios.activity.ActivityDetail;
 import com.andios.adapter.RecyclerViewAdapter;
 import com.andios.activity.R;
 import com.andios.dao.DataOperate;
 import com.andios.dao.HistoryHelper;
 import com.andios.interfaces.OnItemClickListener;
+import com.andios.interfaces.OnLongClickListener;
 
 
 /**
@@ -54,6 +58,27 @@ public class HomeFragment extends Fragment {
                 startActivity(intent);
             }
         });
+        adapter.setOnLongClickListener(new OnLongClickListener() {
+            AlertDialog.Builder dialog=new AlertDialog.Builder(getContext());
+            @Override
+            public boolean onLongClick(View view, final int position) {
+                dialog.setTitle("删除");
+                dialog.setIcon(R.drawable.img);
+                dialog.setPositiveButton("确定", new  DialogInterface.OnClickListener() {
+
+                    @SuppressWarnings("deprecation")
+                    @Override
+                    public void onClick(DialogInterface arg0, int arg1) {
+                        dataOperate.delete(getContext(),position+1);
+                        initRecyclerView();
+                        adapter.notifyDataSetChanged();
+                    }
+                });
+                dialog.create();
+                dialog.show();
+                return true;
+            }
+        });
     }
 
     private void initData(){
@@ -63,7 +88,7 @@ public class HomeFragment extends Fragment {
         details=new String[cursor.getCount()];
         int i=0;
         while (cursor.moveToNext()){
-            text[i]=cursor.getString(cursor.getColumnIndex(HistoryHelper.PROJECT_NANE));
+            text[i]=cursor.getString(cursor.getColumnIndex(HistoryHelper.PROJECT_NAME));
             time[i]=cursor.getString(cursor.getColumnIndex(HistoryHelper.TIME));
             details[i]=cursor.getString(cursor.getColumnIndex(HistoryHelper.DETAILS));
             i++;

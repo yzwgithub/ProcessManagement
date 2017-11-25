@@ -10,7 +10,7 @@ public class HistoryHelper {
     public static final int DATABASE_VERSION=1;
     public static final String ID="id";
     public static final String IsGoToWork="is_work";
-    public static final String PROJECT_NANE="project_name";
+    public static final String PROJECT_NAME="project_name";
     public static final String Local="local";
     public static final String TIME="time";
     public static final String DETAILS="details";

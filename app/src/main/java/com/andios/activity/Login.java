@@ -56,6 +56,11 @@ public class Login extends AppCompatActivity {
         public void onClick(View view) {
             switch (view.getId()){
                 case R.id.login_button:
+                    String username=enter_username.getText().toString();
+                    String password=enter_password.getText().toString();
+                    if (checkBox1.isChecked())
+                        sharedHelper.save(username, password);
+                    else sharedHelper.save(null, null);
                     pageRedirect(Login.this,MainActivity.class);
                     break;
                 case R.id.forget_password:
@@ -69,7 +74,7 @@ public class Login extends AppCompatActivity {
         Map<String,String>data=sharedHelper.read();
         enter_username.setText(data.get("username"));
         enter_password.setText(data.get("password"));
-        if (data.get("username")==null||data.get("password")==null){
+        if (data.get("username").equals("")||data.get("password").equals("")){
             checkBox1.setChecked(false);
         }else checkBox1.setChecked(true);
     }
