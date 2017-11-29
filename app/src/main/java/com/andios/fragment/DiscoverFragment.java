@@ -21,6 +21,7 @@ import com.andios.activity.MapActivity;
 import com.andios.adapter.FeedBackAdapter;
 import com.andios.activity.R;
 import com.andios.dao.DataOperate;
+import com.andios.dao.HistoryHelper;
 import com.andios.util.CameraUtil;
 import com.andios.widget.SettingDialog;
 
@@ -55,6 +56,7 @@ public class DiscoverFragment extends Fragment implements View.OnClickListener {
     private EditText textWork,project_details;
     private Button button;
     private Cursor cursor;
+    private boolean isGet=false;
 
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
@@ -115,6 +117,7 @@ public class DiscoverFragment extends Fragment implements View.OnClickListener {
                 setDialog.dismiss();
                 break;
             case R.id.getLocal:
+                isGet=true;
                 Intent intent=new Intent(getActivity(), MapActivity.class);
                 startActivity(intent);
                 break;
@@ -126,7 +129,7 @@ public class DiscoverFragment extends Fragment implements View.OnClickListener {
                 break;
             case R.id.go_button:
                 cursor=dataOperate.select(getActivity());
-                int id=cursor.getCount()+1;
+                int id=cursor.getCount();
                 String isWork=spinner.getSelectedItem().toString();
                 String work=textWork.getText().toString();
                 String textDate=textTime.getText().toString();
@@ -140,16 +143,16 @@ public class DiscoverFragment extends Fragment implements View.OnClickListener {
                     Toast.makeText(getContext(),"项目描述不能为空",Toast.LENGTH_SHORT).show();
                     break;
                 }
-//                if (local.equals("获取当前位置")){
-//                    Toast.makeText(getContext(),"当前位置不能为空",Toast.LENGTH_SHORT).show();
-//                    break;
-//                }
+                if (!isGet){
+                    Toast.makeText(getContext(),"当前位置不能为空",Toast.LENGTH_SHORT).show();
+                    break;
+                }
                 if (textDate.equals("获取当前时间")){
                     Toast.makeText(getContext(),"当前时间不能为空",Toast.LENGTH_SHORT).show();
                     break;
                 }
                 if (!work.equals("")&&!textDate.equals("获取当前时间")&&!details.equals("")/*&&!local.equals("获取当前位置")*/){
-                    dataOperate.insert(getActivity(),id,isWork,work,local,textDate,details);
+                    dataOperate.update(getActivity(),id,isWork,work,local,textDate,details);
                     Toast.makeText(getActivity(),"签到成功！",Toast.LENGTH_SHORT).show();
                 }
                 break;

@@ -1,129 +1,395 @@
 package com.andios.activity;
 
-import android.Manifest;
+import java.util.List;
+
+import android.app.AlertDialog;
 import android.content.Context;
-import android.content.pm.PackageManager;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
-import android.support.v4.app.ActivityCompat;
-import android.support.v7.app.AppCompatActivity;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.Color;
+import android.graphics.Point;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.andios.dao.DataOperate;
+import com.andios.dao.History;
+import com.andios.fragment.HomeFragment;
+import com.andios.listener.MyOrientationListener;
+import com.andios.util.Info;
+import com.baidu.location.BDLocation;
+import com.baidu.location.BDLocationListener;
+import com.baidu.location.LocationClient;
+import com.baidu.location.LocationClientOption;
 import com.baidu.mapapi.SDKInitializer;
 import com.baidu.mapapi.map.BaiduMap;
+import com.baidu.mapapi.map.BaiduMap.OnMapClickListener;
+import com.baidu.mapapi.map.BaiduMap.OnMarkerClickListener;
+import com.baidu.mapapi.map.BitmapDescriptor;
+import com.baidu.mapapi.map.BitmapDescriptorFactory;
+import com.baidu.mapapi.map.InfoWindow;
+import com.baidu.mapapi.map.MapPoi;
 import com.baidu.mapapi.map.MapStatusUpdate;
 import com.baidu.mapapi.map.MapStatusUpdateFactory;
 import com.baidu.mapapi.map.MapView;
+import com.baidu.mapapi.map.Marker;
+import com.baidu.mapapi.map.MarkerOptions;
+import com.baidu.mapapi.map.MyLocationConfiguration;
+import com.baidu.mapapi.map.MyLocationConfiguration.LocationMode;
 import com.baidu.mapapi.map.MyLocationData;
+import com.baidu.mapapi.map.OverlayOptions;
 import com.baidu.mapapi.model.LatLng;
 
-import java.util.List;
-
 public class MapActivity extends AppCompatActivity {
-    private LocationManager locationManager;
-    private String provider;
-    MapView mapView;
-    BaiduMap baiduMap;
-    boolean ifFrist = true;
+	private MapView mMapView;
+	private BaiduMap mBaiduMap;
+	private Context context;
+	// 定位相关
+	private LocationClient mLocationClient;
+	private MyLocationListener mLocationListener;
+	private boolean isFirstIn = true;
+	private double mLatitude;
+	private double mLongtitude;
+	// 自定义定位图标
+	private BitmapDescriptor mIconLocation;
+	private MyOrientationListener myOrientationListener;
+	private float mCurrentX;
+	private LocationMode mLocationMode;
+	// 覆盖物相关
+	private BitmapDescriptor mMarker;
+	private RelativeLayout mMarkerLy;
+	DataOperate dataOperate;
+	Cursor cursor;
+	private String Address;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        // 初始化操作
-        SDKInitializer.initialize(getApplicationContext());
-        setContentView(R.layout.activity_map);
-        // 显示地图
-        mapView = (MapView) findViewById(R.id.mapview);
-        // 获取baiduMap对象
-        baiduMap = mapView.getMap();
-        // 设置可改变地图位置
-        baiduMap.setMyLocationEnabled(true);
-        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        List<String> list = locationManager.getProviders(true);
-        if (list.contains(LocationManager.GPS_PROVIDER)) {
-            provider = LocationManager.GPS_PROVIDER;
-        } else if (list.contains(LocationManager.NETWORK_PROVIDER)) {
-            provider = LocationManager.NETWORK_PROVIDER;
+	@Override
+	protected void onCreate(Bundle savedInstanceState)
+	{
+		super.onCreate(savedInstanceState);
+		// 在使用SDK各组件之前初始化context信息，传入ApplicationContext
+		// 注意该方法要再setContentView方法之前实现
+		try {
+			getWindow().addFlags(WindowManager.LayoutParams.class.getField("FLAG_NEEDS_MENU_KEY").getInt(null));
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		} catch (NoSuchFieldException e) {
+			e.printStackTrace();
+		}
+		SDKInitializer.initialize(getApplicationContext());
+		setContentView(R.layout.activity_map);
+		this.context = this;
+		initView();
+		//initToolBar();
+		// 初始化定位
+		initLocation();
+		initMarker();
+		mBaiduMap.setOnMarkerClickListener(new OnMarkerClickListener()
+		{
+			@Override
+			public boolean onMarkerClick(Marker marker)
+			{
+				Bundle extraInfo = marker.getExtraInfo();
+				Info info = (Info) extraInfo.getSerializable("info");
+				ImageView iv = (ImageView) mMarkerLy
+						.findViewById(R.id.id_info_img);
+				TextView distance = (TextView) mMarkerLy
+						.findViewById(R.id.id_info_distance);
+				TextView name = (TextView) mMarkerLy
+						.findViewById(R.id.id_info_name);
+				TextView zan = (TextView) mMarkerLy
+						.findViewById(R.id.id_info_zan);
+				iv.setImageResource(info.getImgId());
+				distance.setText(info.getDistance());
+				name.setText(info.getName());
+				zan.setText(info.getZan() + "");
+				InfoWindow infoWindow;
+				TextView tv = new TextView(context);
+				tv.setBackgroundResource(R.drawable.location_tips);
+				tv.setPadding(30, 20, 30, 50);
+				tv.setText(info.getName());
+				tv.setTextColor(Color.parseColor("#ffffff"));
+				final LatLng latLng = marker.getPosition();
+				Point p = mBaiduMap.getProjection().toScreenLocation(latLng);
+				p.y -= 47;
+				LatLng ll = mBaiduMap.getProjection().fromScreenLocation(p);
 
-        } else {
-            Toast.makeText(this, "当前不能提供位置信息", Toast.LENGTH_LONG).show();
-            return;
-        }
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
-        }
-        Location location = locationManager.getLastKnownLocation(provider);
-        if (location != null) {
-            navigateTo(location);
-        }
-        locationManager.requestLocationUpdates(provider, 5000, 1,
-                locationListener);
+				infoWindow = new InfoWindow(tv, ll,-47);
+				mBaiduMap.showInfoWindow(infoWindow);
+				mMarkerLy.setVisibility(View.VISIBLE);
+				return true;
+			}
+		});
+		mBaiduMap.setOnMapClickListener(new OnMapClickListener()
+		{
 
-    }
-    private void navigateTo(Location location) {
-        // 按照经纬度确定地图位置
-        if (ifFrist) {
-            LatLng ll = new LatLng(location.getLatitude(),
-                    location.getLongitude());
-            MapStatusUpdate update = MapStatusUpdateFactory.newLatLng(ll);
-            // 移动到某经纬度
-            baiduMap.animateMapStatus(update);
-            update = MapStatusUpdateFactory.zoomBy(5f);
-            // 放大
-            baiduMap.animateMapStatus(update);
+			@Override
+			public boolean onMapPoiClick(MapPoi arg0)
+			{
+				return false;
+			}
 
-            ifFrist = false;
-        }
-        // 显示个人位置图标
-        MyLocationData.Builder builder = new MyLocationData.Builder();
-        builder.latitude(location.getLatitude());
-        builder.longitude(location.getLongitude());
-        MyLocationData data = builder.build();
-        baiduMap.setMyLocationData(data);
-    }
-    LocationListener locationListener = new LocationListener() {
-        @Override
-        public void onStatusChanged(String arg0, int arg1, Bundle arg2) {
-            // TODO Auto-generated method stub
+			@Override
+			public void onMapClick(LatLng arg0)
+			{
+				mMarkerLy.setVisibility(View.GONE);
+				mBaiduMap.hideInfoWindow();
+			}
+		});
+	}
 
-        }
-        @Override
-        public void onProviderEnabled(String arg0) {
-            // TODO Auto-generated method stub
+	private void initMarker()
+	{
+		mMarker = BitmapDescriptorFactory.fromResource(R.drawable.maker);
+		mMarkerLy = (RelativeLayout) findViewById(R.id.id_maker_ly);
+	}
 
-        }
-        @Override
-        public void onProviderDisabled(String arg0) {
-            // TODO Auto-generated method stub
+	private void initLocation()
+	{
+		mLocationMode = LocationMode.NORMAL;
+		mLocationClient = new LocationClient(this);
+		mLocationListener = new MyLocationListener();
+		mLocationClient.registerLocationListener(mLocationListener);
+		LocationClientOption option = new LocationClientOption();
+		option.setCoorType("bd09ll");
+		option.setIsNeedAddress(true);
+		option.setOpenGps(true);
+		option.setScanSpan(1000);
+		mLocationClient.setLocOption(option);
+		// 初始化图标
+		mIconLocation = BitmapDescriptorFactory
+				.fromResource(R.drawable.navi_map_gps_locked);
+		myOrientationListener = new MyOrientationListener(context);
 
-        }
-        @Override
-        public void onLocationChanged(Location arg0) {
-            // TODO Auto-generated method stub
-            // 位置改变则重新定位并显示地图
-            navigateTo(arg0);
-        }
-    };
-    @Override
-    protected void onDestroy() {
-        // 释放资源
-        super.onDestroy();
-        if (locationManager != null) {
-            locationManager.removeUpdates(locationListener);
-        }
-        mapView.onDestroy();
+		myOrientationListener
+				.setOnOrientationListener(new MyOrientationListener.OnOrientationListener()
+				{
+					@Override
+					public void onOrientationChanged(float x)
+					{
+						mCurrentX = x;
+					}
+				});
 
-        baiduMap.setMyLocationEnabled(false);
+	}
 
-    }
+	private void initView()
+	{
+		mMapView = (MapView) findViewById(R.id.id_bmapView);
+		mBaiduMap = mMapView.getMap();
+		MapStatusUpdate msu = MapStatusUpdateFactory.zoomTo(15.0f);
+		mBaiduMap.setMapStatus(msu);
+	}
 
+	@Override
+	protected void onResume()
+	{
+		super.onResume();
+		// 在activity执行onResume时执行mMapView. onResume ()，实现地图生命周期管理
+		mMapView.onResume();
+	}
+
+	@Override
+	protected void onStart()
+	{
+		super.onStart();
+		// 开启定位
+		mBaiduMap.setMyLocationEnabled(true);
+		if (!mLocationClient.isStarted())
+			mLocationClient.start();
+		// 开启方向传感器
+		myOrientationListener.start();
+	}
+
+	@Override
+	protected void onPause()
+	{
+		super.onPause();
+		// 在activity执行onDestroy时执行mMapView.onDestroy()，实现地图生命周期管理
+		mMapView.onPause();
+	}
+
+	@Override
+	protected void onStop()
+	{
+		super.onStop();
+
+		// 停止定位
+		mBaiduMap.setMyLocationEnabled(false);
+		mLocationClient.stop();
+		// 停止方向传感器
+		myOrientationListener.stop();
+
+	}
+
+	@Override
+	protected void onDestroy()
+	{
+		super.onDestroy();
+		// 在activity执行onDestroy时执行mMapView.onDestroy()，实现地图生命周期管理
+		mMapView.onDestroy();
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu)
+	{
+		getMenuInflater().inflate(R.menu.main_map, menu);
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item)
+	{
+		switch (item.getItemId()) {
+			case R.id.id_map_common:
+				mBaiduMap.setMapType(BaiduMap.MAP_TYPE_NORMAL);
+				break;
+
+			case R.id.id_map_site:
+				mBaiduMap.setMapType(BaiduMap.MAP_TYPE_SATELLITE);
+				break;
+
+			case R.id.id_map_traffic:
+				if (mBaiduMap.isTrafficEnabled())
+				{
+					mBaiduMap.setTrafficEnabled(false);
+					item.setTitle("实时交通(off)");
+				} else
+				{
+					mBaiduMap.setTrafficEnabled(true);
+					item.setTitle("实时交通(on)");
+				}
+				break;
+			case R.id.id_map_location:
+				centerToMyLocation();
+				break;
+			case R.id.id_map_mode_common:
+				mLocationMode = LocationMode.NORMAL;
+				break;
+			case R.id.id_map_mode_following:
+				mLocationMode = LocationMode.FOLLOWING;
+				break;
+			case R.id.id_map_mode_compass:
+				mLocationMode = LocationMode.COMPASS;
+				break;
+			case R.id.id_add_overlay:
+				addOverlays(Info.infos);
+				break;
+			case R.id.id_correct:
+				move();
+				MapActivity.this.finish();
+				break;
+			default:
+				break;
+		}
+
+		return super.onOptionsItemSelected(item);
+	}
+
+	/**
+	 * 添加覆盖物
+	 *
+	 * @param infos
+	 */
+	private void addOverlays(List<Info> infos)
+	{
+		mBaiduMap.clear();
+		LatLng latLng = null;
+		Marker marker = null;
+		OverlayOptions options;
+		for (Info info : infos)
+		{
+			// 经纬度
+			latLng = new LatLng(info.getLatitude(), info.getLongitude());
+			// 图标
+			options = new MarkerOptions().position(latLng).icon(mMarker)
+					.zIndex(5);
+			marker = (Marker) mBaiduMap.addOverlay(options);
+			Bundle arg0 = new Bundle();
+			arg0.putSerializable("info", info);
+			marker.setExtraInfo(arg0);
+		}
+
+		MapStatusUpdate msu = MapStatusUpdateFactory.newLatLng(latLng);
+		mBaiduMap.setMapStatus(msu);
+
+	}
+
+	/**
+	 * 定位到我的位置
+	 */
+	private void centerToMyLocation()
+	{
+		LatLng latLng = new LatLng(mLatitude, mLongtitude);
+		MapStatusUpdate msu = MapStatusUpdateFactory.newLatLng(latLng);
+		mBaiduMap.animateMapStatus(msu);
+	}
+
+	private class MyLocationListener implements BDLocationListener {
+
+		@Override
+		public void onReceiveLocation(BDLocation location)
+		{
+
+			MyLocationData data = new MyLocationData.Builder()//
+					.direction(mCurrentX)//
+					.accuracy(location.getRadius())//
+					.latitude(location.getLatitude())//
+					.longitude(location.getLongitude())//
+					.build();
+			mBaiduMap.setMyLocationData(data);
+			// 设置自定义图标
+			MyLocationConfiguration config = new MyLocationConfiguration(
+					mLocationMode, true, mIconLocation);
+			mBaiduMap.setMyLocationConfigeration(config);
+
+			// 更新经纬度
+			mLatitude = location.getLatitude();
+			mLongtitude = location.getLongitude();
+
+			if (isFirstIn)
+			{
+				LatLng latLng = new LatLng(location.getLatitude(),
+						location.getLongitude());
+				MapStatusUpdate msu = MapStatusUpdateFactory.newLatLng(latLng);
+				setAddress(location.getAddrStr());
+				mBaiduMap.animateMapStatus(msu);
+				isFirstIn = false;
+//				Toast.makeText(context, location.getAddrStr(),
+//						Toast.LENGTH_SHORT).show();
+				AlertDialog.Builder dialog=new AlertDialog.Builder(MapActivity.this);
+				dialog.setMessage("位置获取成功，是否返回？");
+				dialog.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						move();
+						MapActivity.this.finish();
+					}
+				});
+				dialog.show();
+			}
+		}
+	}
+	public void setAddress(String address) {
+		Address = address;
+	}
+
+	public String getAddress() {
+		return Address;
+	}
+	public void move(){
+		dataOperate=new DataOperate();
+		cursor=dataOperate.select(MapActivity.this);
+		int position=cursor.getCount()+1;
+		dataOperate.insert(MapActivity.this,position,null,null,getAddress(),null,null);
+	}
 }
