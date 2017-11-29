@@ -5,26 +5,20 @@ import java.util.List;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.andios.dao.DataOperate;
-import com.andios.dao.History;
-import com.andios.fragment.HomeFragment;
 import com.andios.listener.MyOrientationListener;
 import com.andios.util.Info;
 import com.baidu.location.BDLocation;
@@ -364,8 +358,6 @@ public class MapActivity extends AppCompatActivity {
 				setAddress(location.getAddrStr());
 				mBaiduMap.animateMapStatus(msu);
 				isFirstIn = false;
-//				Toast.makeText(context, location.getAddrStr(),
-//						Toast.LENGTH_SHORT).show();
 				AlertDialog.Builder dialog=new AlertDialog.Builder(MapActivity.this);
 				dialog.setMessage("位置获取成功，是否返回？");
 				dialog.setPositiveButton("确定", new DialogInterface.OnClickListener() {
@@ -382,7 +374,6 @@ public class MapActivity extends AppCompatActivity {
 	public void setAddress(String address) {
 		Address = address;
 	}
-
 	public String getAddress() {
 		return Address;
 	}
