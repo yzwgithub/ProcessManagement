@@ -11,7 +11,7 @@ import android.database.sqlite.SQLiteDatabase;
  */
 
 public class DataOperate {
-    public void insert(Context context,int id, String iswork,String project_name,String local, String date, String details){
+    public void insert(Context context,int id, String iswork,String project_name,String date, String details){
 
         History history=new History(context);
         SQLiteDatabase sqLiteDatabase=history.getWritableDatabase();
@@ -19,7 +19,6 @@ public class DataOperate {
         cv.put(HistoryHelper.ID,id);
         cv.put(HistoryHelper.IsGoToWork,iswork);
         cv.put(HistoryHelper.PROJECT_NAME,project_name);
-        cv.put(HistoryHelper.Local,local);
         cv.put(HistoryHelper.TIME,date);
         cv.put(HistoryHelper.DETAILS,details);
         sqLiteDatabase.insert(HistoryHelper.TABLE_NAME,null,cv);
@@ -37,18 +36,12 @@ public class DataOperate {
         String[] whereValue ={ Integer.toString(position) };
         sqLiteDatabase.delete(HistoryHelper.TABLE_NAME,where,whereValue);
     }
-    public void update(Context context,int id, String iswork,String project_name,String local, String date, String details){
+    public void insertLocal(Context context,int id ,String local){
         History history=new History(context);
         SQLiteDatabase sqLiteDatabase=history.getWritableDatabase();
-        String where =HistoryHelper.ID+ " = ?";
-        String[] whereValue ={ Integer.toString(id) };
         ContentValues cv = new ContentValues();
         cv.put(HistoryHelper.ID,id);
-        cv.put(HistoryHelper.IsGoToWork,iswork);
-        cv.put(HistoryHelper.PROJECT_NAME,project_name);
-        //cv.put(HistoryHelper.Local,local);
-        cv.put(HistoryHelper.TIME,date);
-        cv.put(HistoryHelper.DETAILS,details);
-        sqLiteDatabase.update(HistoryHelper.TABLE_NAME,cv,where,whereValue);
+        cv.put(HistoryHelper.Local,local);
+        sqLiteDatabase.insert(HistoryHelper.TABLE_NAME,null,cv);
     }
 }

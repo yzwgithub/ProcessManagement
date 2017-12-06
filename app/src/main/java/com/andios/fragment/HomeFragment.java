@@ -69,8 +69,7 @@ public class HomeFragment extends Fragment {
                     @SuppressWarnings("deprecation")
                     @Override
                     public void onClick(DialogInterface arg0, int arg1) {
-                        dataOperate.delete(getContext(),position+1);
-                        initRecyclerView();
+                        dataOperate.delete(getContext(),position);
                         adapter.notifyDataSetChanged();
                     }
                 });

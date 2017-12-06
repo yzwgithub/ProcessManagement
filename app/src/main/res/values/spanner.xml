@@ -5,4 +5,10 @@
         <item>事假</item>
         <item>休假</item>
     </string-array>
+    <string-array name="role">
+        <item>请选择</item>
+        <item>部门经理</item>
+        <item>项目经理</item>
+        <item>员工</item>
+    </string-array>
 </resources>

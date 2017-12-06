@@ -19,8 +19,15 @@
         android:layout_height="200dp"
         android:layout_gravity="center"
         android:src="@drawable/img"/>
-    <EditText
+    <Spinner
+        android:id="@+id/role"
         android:layout_marginTop="30dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:entries="@array/role"
+        android:textColor="#FFFFFF"/>
+    <EditText
+        android:layout_marginTop="10dp"
         android:textColorHint="#FFFFFF"
         android:id="@+id/login_enter_username"
         android:layout_width="match_parent"

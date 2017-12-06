@@ -381,6 +381,6 @@ public class MapActivity extends AppCompatActivity {
 		dataOperate=new DataOperate();
 		cursor=dataOperate.select(MapActivity.this);
 		int position=cursor.getCount()+1;
-		dataOperate.insert(MapActivity.this,position,null,null,getAddress(),null,null);
+		dataOperate.insertLocal(MapActivity.this,position,getAddress());
 	}
 }
