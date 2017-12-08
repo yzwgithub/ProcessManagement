@@ -24,7 +24,10 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-
+/**
+ * Created by YangZheWen on 2017/10/23.
+ * 登录
+ */
 public class Login extends AppCompatActivity {
     private Spinner spinner;
     private EditText enter_username,enter_password;
@@ -66,6 +69,7 @@ public class Login extends AppCompatActivity {
     class onClickListener implements View.OnClickListener{
         @Override
         public void onClick(View view) {
+            final String url="http://192.168.1.138:8080/user/login?";
             switch (view.getId()){
                 case R.id.login_button:
                     String role=spinner.getSelectedItem().toString();
@@ -74,7 +78,9 @@ public class Login extends AppCompatActivity {
                     if (checkBox1.isChecked())
                         sharedHelper.save(username, password);
                     else sharedHelper.save(null, null);
-                    Login("http://192.168.1.138:8080/user/login?");
+                    login(url,username,password,returnInt(role));
+                    Intent intent=new Intent(Login.this, MainActivity.class);
+                    startActivity(intent);
                     break;
                 case R.id.forget_password:
                     break;
@@ -91,16 +97,22 @@ public class Login extends AppCompatActivity {
             checkBox1.setChecked(false);
         }else checkBox1.setChecked(true);
     }
-    private void pageRedirect(Context context, Class<?>newClass){
-        Intent intent=new Intent(context,newClass);
-        startActivity(intent);
+    private String returnInt(String role){
+        if (role.equals("合伙人"))
+            return "0";
+        if (role.equals("部门经理"))
+            return "1";
+        if (role.equals("项目经理"))
+            return "2";
+        if (role.equals("员工"))
+            return "3";
+        return "4";
     }
-    private void Login(String url){
+    private void login(final String url, final String userName, final String password, final String role){
         StringRequest request=new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String s) {
-                Toast.makeText(Login.this,"登录成功",Toast.LENGTH_SHORT).show();
-                pageRedirect(Login.this,MainActivity.class);
+                Toast.makeText(Login.this,s,Toast.LENGTH_SHORT).show();
             }
         }, new Response.ErrorListener() {
             @Override
@@ -111,9 +123,9 @@ public class Login extends AppCompatActivity {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String,String>map=new HashMap<>();
-                map.put("userName","123");
-                map.put("password","123");
-                map.put("role","0");
+                map.put("userName",userName);
+                map.put("password",password);
+                map.put("role",role);
                 return map;
             }
         };

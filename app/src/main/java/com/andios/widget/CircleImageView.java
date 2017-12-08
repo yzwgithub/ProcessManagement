@@ -14,7 +14,8 @@ import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 
 /**
- * Created by ASUS on 2017/11/19.
+ * Created by YangZheWen on 2017/11/19.
+ * 自定义圆形的ImageView
  */
 
 public class CircleImageView extends android.support.v7.widget.AppCompatImageView {

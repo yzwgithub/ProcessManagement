@@ -17,7 +17,8 @@
     <string name="work">获取项目名称</string>
     <string name="enter_work">请填写项目名称</string>
     <string name="sign">每日签到</string>
-    <string name="go">签到</string>
+    <string name="signIn">签到</string>
+    <string name="signOut">签退</string>
     <string name="getLocal">获取当前位置</string>
     <string name="getImg">拍照获取图片</string>
     <string name="phoneNumber">手机号</string>

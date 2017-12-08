@@ -27,7 +27,7 @@ import com.andios.interfaces.OnLongClickListener;
 
 
 /**
- * Created by ASUS on 2017/6/13.
+ * Created by YangZheWen on 2017/6/13.
  */
 
 public class HomeFragment extends Fragment {
@@ -80,6 +80,9 @@ public class HomeFragment extends Fragment {
         });
     }
 
+    /**
+     * 初始化数据
+     */
     private void initData(){
         cursor=dataOperate.select(getContext());
         text=new String[cursor.getCount()];
@@ -93,6 +96,10 @@ public class HomeFragment extends Fragment {
             i++;
         }
     }
+
+    /**
+     * 初始化RecyclerView
+     */
     private void initRecyclerView(){
         RecyclerView recyclerView= (RecyclerView) getView().findViewById(R.id.recyclerview);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
@@ -101,6 +108,10 @@ public class HomeFragment extends Fragment {
         recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(),1));
         recyclerView.setAdapter(adapter=new RecyclerViewAdapter(getActivity(),text,time,details));
     }
+
+    /**
+     * 初始化ToolBar
+     */
     private void initToolBar(){
         Toolbar toolbar= (Toolbar) getView().findViewById(R.id.tb_toolbar);
         toolbar.setPopupTheme(R.style.Widget_AppCompat_PopupMenu);

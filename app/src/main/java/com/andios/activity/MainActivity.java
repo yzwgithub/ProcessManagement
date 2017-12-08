@@ -6,17 +6,30 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 import com.andios.adapter.SectionsPagerAdapter;
 import com.andios.fragment.DiscoverFragment;
 import com.andios.fragment.HomeFragment;
 import com.andios.fragment.UserCentralFragment;
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.ashokvarma.bottomnavigation.BottomNavigationBar;
 import com.ashokvarma.bottomnavigation.BottomNavigationItem;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-
+import java.util.Map;
+/**
+ * Created by YangZheWen on 2017/10/23.
+ * 主界面，包含三个Fragment
+ */
 public class MainActivity extends AppCompatActivity implements BottomNavigationBar.OnTabSelectedListener,ViewPager.OnPageChangeListener{
     private BottomNavigationBar bottomNavigationBar;
     private ViewPager viewPager;
@@ -29,6 +42,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationB
         setContentView(R.layout.activity_main);
         initViewPager();
         initBottomNavigation();
+        queryUser("http://192.168.1.138:8080/user/queryUser?");
     }
 
     @Override
@@ -61,6 +75,10 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationB
     public void onTabReselected(int position) {
 
     }
+
+    /**
+     * 初始化界面ViewPager
+     */
     private void initViewPager() {
 
         viewPager = (ViewPager) findViewById(R.id.view_pager);
@@ -78,6 +96,10 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationB
         viewPager.addOnPageChangeListener(this);
         viewPager.setCurrentItem(0);
     }
+
+    /**
+     * 初始化BottomNavigation
+     */
     private void initBottomNavigation(){
         bottomNavigationBar= (BottomNavigationBar) findViewById(R.id.buttom_bar);
         bottomNavigationBar.setMode(BottomNavigationBar.MODE_DEFAULT);
@@ -88,5 +110,32 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationB
                 .setFirstSelectedPosition(0)
                 .initialise();
         bottomNavigationBar.setTabSelectedListener(this);//注册监听事件
+    }
+
+    /**
+     * 访问网络获取用户的详细信息
+     * @param url 请求的url
+     */
+    private void queryUser(String url){
+        StringRequest request=new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String s) {
+                //Toast.makeText(MainActivity.this,s,Toast.LENGTH_SHORT).show();
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                //Toast.makeText(MainActivity.this,volleyError.toString(),Toast.LENGTH_SHORT).show();
+            }
+        }){
+            @Override
+            protected Map<String,String> getParams() throws AuthFailureError {
+                Map<String,String> map=new HashMap<>();
+                map.put("user_id","1");
+                return map;
+            }
+        };
+        RequestQueue queue= Volley.newRequestQueue(MainActivity.this);
+        queue.add(request);
     }
 }

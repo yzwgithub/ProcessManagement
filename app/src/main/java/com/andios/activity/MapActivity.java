@@ -44,6 +44,9 @@ import com.baidu.mapapi.map.MyLocationData;
 import com.baidu.mapapi.map.OverlayOptions;
 import com.baidu.mapapi.model.LatLng;
 
+/**
+ * Created by YangZheWen on 2017/10/23.
+ */
 public class MapActivity extends AppCompatActivity {
 	private MapView mMapView;
 	private BaiduMap mBaiduMap;

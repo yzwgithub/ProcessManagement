@@ -9,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
@@ -24,17 +25,27 @@ import com.andios.dao.DataOperate;
 import com.andios.dao.HistoryHelper;
 import com.andios.util.CameraUtil;
 import com.andios.widget.SettingDialog;
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static android.app.Activity.RESULT_OK;
 
 
 /**
- * Created by ASUS on 2017/6/13.
+ * Created by YangZheWen 2017/11/21.
+ *
  */
 
 public class DiscoverFragment extends Fragment implements View.OnClickListener {
@@ -54,7 +65,8 @@ public class DiscoverFragment extends Fragment implements View.OnClickListener {
     private Spinner spinner;
     private TextView textLocal,textTime;
     private EditText textWork,project_details;
-    private Button button;
+    private Button signIn;
+    private Button signOut;
     private Cursor cursor;
     private boolean isGet=false;
 
@@ -77,22 +89,24 @@ public class DiscoverFragment extends Fragment implements View.OnClickListener {
     }
 
     private void initView() {
-        spinner= (Spinner) getView().findViewById(R.id.spinner);
-        textLocal= (TextView) getView().findViewById(R.id.getLocal);
-        textWork= (EditText) getView().findViewById(R.id.work);
-        project_details= (EditText) getView().findViewById(R.id.project_details);
-        textTime= (TextView) getView().findViewById(R.id.textTime);
-        button= (Button) getView().findViewById(R.id.go_button);
+        spinner = (Spinner) getView().findViewById(R.id.spinner);
+        textLocal = (TextView) getView().findViewById(R.id.getLocal);
+        textWork = (EditText) getView().findViewById(R.id.work);
+        project_details = (EditText) getView().findViewById(R.id.project_details);
+        textTime = (TextView) getView().findViewById(R.id.textTime);
         imgFbackAdd = (LinearLayout) getView().findViewById(R.id.img_fback_add);
         gvFbackImg = (GridView) getView().findViewById(R.id.gv_fback_img);
         setDialog = new SettingDialog(getActivity(), R.style.setting_dialog_style);
+        signIn= (Button) getView().findViewById(R.id.signIn);
+        signOut= (Button) getView().findViewById(R.id.signOut);
         setDialog.bt1.setOnClickListener(this);
         setDialog.bt2.setOnClickListener(this);
         imgFbackAdd.setOnClickListener(this);
         textLocal.setOnClickListener(this);
         textTime.setOnClickListener(this);
-        button.setOnClickListener(this);
         textWork.setOnClickListener(this);
+        signIn.setOnClickListener(this);
+        signOut.setOnClickListener(this);
         imgList = new ArrayList<>();
         gvFbackImg.setEnabled(false);
     }
@@ -127,7 +141,7 @@ public class DiscoverFragment extends Fragment implements View.OnClickListener {
                 SimpleDateFormat format=new SimpleDateFormat("yyyy年MM月dd日 HH:mm");
                 textTime.setText(format.format(date));
                 break;
-            case R.id.go_button:
+            case R.id.signIn:
                 cursor=dataOperate.select(getActivity());
                 int id=cursor.getCount();
                 String isWork=spinner.getSelectedItem().toString();
@@ -152,6 +166,36 @@ public class DiscoverFragment extends Fragment implements View.OnClickListener {
                 }
                 if (!work.equals("")&&!textDate.equals("获取当前时间")&&!details.equals("")/*&&!local.equals("获取当前位置")*/){
                     dataOperate.insert(getActivity(),id,isWork,work,textDate,details);
+                    signInOrOut("http://192.168.1.138:8080/attendance/signIn?");
+                    Toast.makeText(getActivity(),"签到成功！",Toast.LENGTH_SHORT).show();
+                }
+                break;
+            case R.id.signOut:
+                cursor=dataOperate.select(getActivity());
+                int id_out=cursor.getCount();
+                String isWork_ou=spinner.getSelectedItem().toString();
+                String work_ou=textWork.getText().toString();
+                String textDate_ou=textTime.getText().toString();
+                String details_ou=project_details.getText().toString();
+                if (work_ou.equals("")){
+                    Toast.makeText(getContext(),"项目名称不能为空",Toast.LENGTH_SHORT).show();
+                    break;
+                }
+                if (details_ou.equals("")){
+                    Toast.makeText(getContext(),"项目描述不能为空",Toast.LENGTH_SHORT).show();
+                    break;
+                }
+                if (!isGet){
+                    Toast.makeText(getContext(),"当前位置不能为空",Toast.LENGTH_SHORT).show();
+                    break;
+                }
+                if (textDate_ou.equals("获取当前时间")){
+                    Toast.makeText(getContext(),"当前时间不能为空",Toast.LENGTH_SHORT).show();
+                    break;
+                }
+                if (!work_ou.equals("")&&!textDate_ou.equals("获取当前时间")&&!details_ou.equals("")/*&&!local.equals("获取当前位置")*/){
+                    dataOperate.insert(getActivity(),id_out,isWork_ou,work_ou,textDate_ou,details_ou);
+                    signInOrOut("http://192.168.1.138:8080/attendance/signIn?");
                     Toast.makeText(getActivity(),"签到成功！",Toast.LENGTH_SHORT).show();
                 }
                 break;
@@ -202,5 +246,28 @@ public class DiscoverFragment extends Fragment implements View.OnClickListener {
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
+    }
+    private void signInOrOut(String url){
+        StringRequest request=new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String s) {
+                System.out.print("-----------------------------------------------------------");
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                System.out.print(".............................................................");
+            }
+        }){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String,String>map=new HashMap<>();
+                map.put("user_id","2");
+                map.put("location","黄石市");
+                return map;
+            }
+        };
+        RequestQueue queue= Volley.newRequestQueue(getContext());
+        queue.add(request);
     }
 }

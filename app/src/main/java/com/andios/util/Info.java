@@ -6,6 +6,10 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Created by YangZheWen on 2017/10/23.
+ * 获取地图信息的工具类
+ */
 public class Info implements Serializable
 {
 	private static final long serialVersionUID = -1010711775392052966L;

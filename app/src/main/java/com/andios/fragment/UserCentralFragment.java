@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import com.andios.activity.R;
 
 /**
- * Created by ASUS on 2017/6/13.
+ * Created by YangZheWen on 2017/6/13.
  */
 
 public class UserCentralFragment extends Fragment {

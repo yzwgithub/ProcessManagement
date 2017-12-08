@@ -14,7 +14,8 @@ import android.provider.MediaStore;
 import android.support.v4.content.CursorLoader;
 
 /**
- * @author MMF
+ * Created by YangZheWen on 2017/10/23.
+ * 拍照的工具类
  */
 public class CameraUtil {
 

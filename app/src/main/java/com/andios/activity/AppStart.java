@@ -10,7 +10,7 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 
 /**
- * Created by ASUS on 2017/10/23.
+ * Created by YangZheWen on 2017/10/23.
  * App启动动画
  */
 
@@ -36,6 +36,10 @@ public class AppStart extends AppCompatActivity {
             public void onAnimationStart(Animation arg0) {}
         });
     }
+
+    /**
+     * 实现页面跳转
+     */
     protected void redirectTo() {
         Intent intent = new Intent(this, Login.class);
         startActivity(intent);

@@ -13,7 +13,8 @@ import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 
 /**
- * Created by ASUS on 2017/10/24.
+ * Created by YangZheWen on 2017/10/24.
+ * 自定义圆形ImageView
  */
 
 public class RoundImageView extends android.support.v7.widget.AppCompatImageView {
@@ -47,6 +48,13 @@ public class RoundImageView extends android.support.v7.widget.AppCompatImageView
             super.onDraw(canvas);
         }
     }
+
+    /**
+     * 设置图片的参数
+     * @param bitmap
+     * @param pixels
+     * @return
+     */
     private Bitmap getCircleBitmap(Bitmap bitmap,int pixels){
         final int color=0xff424242;
         final Rect rect=new Rect(0,0,bitmap.getWidth(),bitmap.getHeight());

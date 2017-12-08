@@ -19,7 +19,7 @@ import java.util.HashMap;
 
 
 /**
- * Created by ASUS on 2017/6/13.
+ * Created by YangZheWen on 2017/6/13.
  */
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.MyViewHolder> {

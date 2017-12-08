@@ -22,6 +22,9 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 
+/**
+ * Created by YangZheWen 2017/11/21.
+ */
 public class FeedBackAdapter extends BaseAdapter {
 	private List<String> imgList;
 	private LayoutInflater mInflater;
