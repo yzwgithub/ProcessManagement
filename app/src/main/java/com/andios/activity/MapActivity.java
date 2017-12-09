@@ -20,6 +20,7 @@ import android.widget.TextView;
 
 import com.andios.dao.DataOperate;
 import com.andios.listener.MyOrientationListener;
+import com.andios.util.Constants;
 import com.andios.util.Info;
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
@@ -376,6 +377,7 @@ public class MapActivity extends AppCompatActivity {
 	}
 	public void setAddress(String address) {
 		Address = address;
+		Constants.signInlocation=address;
 	}
 	public String getAddress() {
 		return Address;

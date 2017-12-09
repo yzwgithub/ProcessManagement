@@ -7,7 +7,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 /**
- * Created by YANGZHEWEN 2017/11/21.
+ * Created by YangZheWen 2017/11/21.
  * 数据库操作类
  */
 

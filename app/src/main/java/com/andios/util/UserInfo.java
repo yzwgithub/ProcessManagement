@@ -6,15 +6,9 @@ package com.andios.util;
  */
 
 public class UserInfo {
-    private String user_id;
-    public UserInfo(){
-
-    }
-    public UserInfo(String user_id) {
-        this.user_id = user_id;
-    }
-
+    private String info_id;
     private String dept_id;
+    private String p_id;
     private String real_name;
     private String job;
     private String positio;
@@ -23,10 +17,8 @@ public class UserInfo {
     private String idcard;
     private String dailysettle;
     private String borrow;
-
-    public UserInfo(String user_id, String dept_id, String real_name, String job, String positio,
+    public UserInfo(String dept_id, String real_name, String job, String positio,
                     String pracreq, String phone, String idcard, String dailysettle, String borrow) {
-        this.user_id = user_id;
         this.dept_id = dept_id;
         this.real_name = real_name;
         this.job = job;
@@ -38,8 +30,20 @@ public class UserInfo {
         this.borrow = borrow;
     }
 
-    public void setUser_id(String user_id) {
-        this.user_id = user_id;
+    public String getInfo_id() {
+        return info_id;
+    }
+
+    public void setInfo_id(String info_id) {
+        this.info_id = info_id;
+    }
+
+    public String getP_id() {
+        return p_id;
+    }
+
+    public void setP_id(String p_id) {
+        this.p_id = p_id;
     }
 
     public void setDept_id(String dept_id) {
@@ -78,9 +82,6 @@ public class UserInfo {
         this.borrow = borrow;
     }
 
-    public String getUser_id() {
-        return user_id;
-    }
 
     public String getDept_id() {
         return dept_id;

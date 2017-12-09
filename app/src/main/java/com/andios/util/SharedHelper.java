@@ -19,11 +19,14 @@ public class SharedHelper {
 
 
     //定义一个保存数据的方法
-    public void save(String username, String password) {
+    public void save(String user_id,String username, String password,String role,String status) {
         SharedPreferences sp = mContext.getSharedPreferences("mysp", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
+        editor.putString("user_id",user_id);
         editor.putString("username", username);
         editor.putString("password", password);
+        editor.putString("role",role);
+        editor.putString("status",status);
         editor.commit();
     }
 
@@ -33,6 +36,9 @@ public class SharedHelper {
         SharedPreferences sp = mContext.getSharedPreferences("mysp", Context.MODE_PRIVATE);
         data.put("username", sp.getString("username", ""));
         data.put("password", sp.getString("password", ""));
+        data.put("user_id", sp.getString("user_id", ""));
+        data.put("role", sp.getString("role", ""));
+        data.put("status", sp.getString("status", ""));
         return data;
     }
 }

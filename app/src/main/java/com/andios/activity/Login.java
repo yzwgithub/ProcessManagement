@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -17,6 +18,7 @@ import android.widget.Toast;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.andios.util.LoginData;
 import com.andios.util.SharedHelper;
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -24,6 +26,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.gson.Gson;
+
 /**
  * Created by YangZheWen on 2017/10/23.
  * 登录
@@ -53,8 +57,8 @@ public class Login extends AppCompatActivity {
                 String username=enter_username.getText().toString();
                 String password=enter_password.getText().toString();
                 if (isChecked)
-                    sharedHelper.save(username, password);
-                else sharedHelper.save(null, null);
+                    sharedHelper.save(null, username,password,null,null);
+                else sharedHelper.save(null, null,null,null,null);
             }
         });
     }
@@ -69,18 +73,20 @@ public class Login extends AppCompatActivity {
     class onClickListener implements View.OnClickListener{
         @Override
         public void onClick(View view) {
-            final String url="http://192.168.1.138:8080/user/login?";
+            final String url="http://192.168.1.127:8080/user/login?";
             switch (view.getId()){
                 case R.id.login_button:
                     String role=spinner.getSelectedItem().toString();
                     String username=enter_username.getText().toString();
                     String password=enter_password.getText().toString();
+                    if (username.equals("")||password.equals("")||returnInt(role).equals("-1")) {
+                        Toast.makeText(context, "请填写完整的登录信息", Toast.LENGTH_SHORT).show();
+                        break;
+                    }
                     if (checkBox1.isChecked())
-                        sharedHelper.save(username, password);
-                    else sharedHelper.save(null, null);
+                        sharedHelper.save(null, username,password,returnInt(role),null);
+                    else sharedHelper.save(null, null,null,null,null);
                     login(url,username,password,returnInt(role));
-                    Intent intent=new Intent(Login.this, MainActivity.class);
-                    startActivity(intent);
                     break;
                 case R.id.forget_password:
                     break;
@@ -106,18 +112,28 @@ public class Login extends AppCompatActivity {
             return "2";
         if (role.equals("员工"))
             return "3";
-        return "4";
+        return "-1";
     }
     private void login(final String url, final String userName, final String password, final String role){
         StringRequest request=new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String s) {
-                Toast.makeText(Login.this,s,Toast.LENGTH_SHORT).show();
+                Gson gson=new Gson();
+                LoginData loginData=gson.fromJson(s,LoginData.class);
+                if (loginData==null){
+                    Toast.makeText(Login.this, "用户名或密码输入错误", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                sharedHelper.save(loginData.getUser_id(),loginData.getUser_name(),
+                        loginData.getPassword(),loginData.getRole(),loginData.getStatus());
+                Toast.makeText(Login.this,loginData.getUser_id(),Toast.LENGTH_SHORT).show();
+                Intent intent=new Intent(Login.this, MainActivity.class);
+                startActivity(intent);
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
-                Toast.makeText(Login.this,"用户名或密码错误！",Toast.LENGTH_SHORT).show();
+                Log.i("Login","mwssage:"+volleyError.getMessage());
             }
         }){
             @Override

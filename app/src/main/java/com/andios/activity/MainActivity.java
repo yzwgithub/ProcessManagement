@@ -75,7 +75,6 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationB
     public void onTabReselected(int position) {
 
     }
-
     /**
      * 初始化界面ViewPager
      */

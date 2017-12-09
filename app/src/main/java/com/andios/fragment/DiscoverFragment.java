@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +25,8 @@ import com.andios.activity.R;
 import com.andios.dao.DataOperate;
 import com.andios.dao.HistoryHelper;
 import com.andios.util.CameraUtil;
+import com.andios.util.Constants;
+import com.andios.util.SharedHelper;
 import com.andios.widget.SettingDialog;
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -166,7 +169,7 @@ public class DiscoverFragment extends Fragment implements View.OnClickListener {
                 }
                 if (!work.equals("")&&!textDate.equals("获取当前时间")&&!details.equals("")/*&&!local.equals("获取当前位置")*/){
                     dataOperate.insert(getActivity(),id,isWork,work,textDate,details);
-                    signInOrOut("http://192.168.1.138:8080/attendance/signIn?");
+                    signInOrOut("http://192.168.1.127:8080/phone/signIn?");
                     Toast.makeText(getActivity(),"签到成功！",Toast.LENGTH_SHORT).show();
                 }
                 break;
@@ -185,7 +188,7 @@ public class DiscoverFragment extends Fragment implements View.OnClickListener {
                     Toast.makeText(getContext(),"项目描述不能为空",Toast.LENGTH_SHORT).show();
                     break;
                 }
-                if (!isGet){
+                if (Constants.signInlocation==null){
                     Toast.makeText(getContext(),"当前位置不能为空",Toast.LENGTH_SHORT).show();
                     break;
                 }
@@ -195,7 +198,7 @@ public class DiscoverFragment extends Fragment implements View.OnClickListener {
                 }
                 if (!work_ou.equals("")&&!textDate_ou.equals("获取当前时间")&&!details_ou.equals("")/*&&!local.equals("获取当前位置")*/){
                     dataOperate.insert(getActivity(),id_out,isWork_ou,work_ou,textDate_ou,details_ou);
-                    signInOrOut("http://192.168.1.138:8080/attendance/signIn?");
+                    signInOrOut("http://192.168.1.127:8080/phone/signOut?");
                     Toast.makeText(getActivity(),"签到成功！",Toast.LENGTH_SHORT).show();
                 }
                 break;
@@ -251,19 +254,22 @@ public class DiscoverFragment extends Fragment implements View.OnClickListener {
         StringRequest request=new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String s) {
-                System.out.print("-----------------------------------------------------------");
+                Toast.makeText(getContext(),s,Toast.LENGTH_SHORT).show();
+                Log.i("as","-----------------------------------------------------------");
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
-                System.out.print(".............................................................");
+                Log.i("as","错误是"+volleyError.getMessage());
             }
         }){
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
+                SharedHelper sharedHelper=new SharedHelper(getContext());
+                Map<String,String>data=sharedHelper.read();
                 Map<String,String>map=new HashMap<>();
-                map.put("user_id","2");
-                map.put("location","黄石市");
+                map.put("user_id",data.get("user_id"));
+                map.put("location", Constants.signInlocation);
                 return map;
             }
         };
