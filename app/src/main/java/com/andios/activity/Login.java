@@ -54,11 +54,12 @@ public class Login extends AppCompatActivity {
         checkBox1.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                String role=spinner.getSelectedItem().toString();
                 String username=enter_username.getText().toString();
                 String password=enter_password.getText().toString();
                 if (isChecked)
-                    sharedHelper.save(null, username,password,null,null);
-                else sharedHelper.save(null, null,null,null,null);
+                    sharedHelper.save(null, username,password,returnInt(role),null);
+                else sharedHelper.save(null, null,null,"0",null);
             }
         });
     }
@@ -73,7 +74,7 @@ public class Login extends AppCompatActivity {
     class onClickListener implements View.OnClickListener{
         @Override
         public void onClick(View view) {
-            final String url="http://192.168.1.127:8080/user/login?";
+            final String url="http://192.168.110.199:8080/user/login?";
             switch (view.getId()){
                 case R.id.login_button:
                     String role=spinner.getSelectedItem().toString();
@@ -85,8 +86,10 @@ public class Login extends AppCompatActivity {
                     }
                     if (checkBox1.isChecked())
                         sharedHelper.save(null, username,password,returnInt(role),null);
-                    else sharedHelper.save(null, null,null,null,null);
-                    login(url,username,password,returnInt(role));
+                    else sharedHelper.save(null, null,null,"0",null);
+                    //login(url,username,password,returnInt(role)-1);
+                    Intent intent=new Intent(Login.this, MainActivity.class);
+                    startActivity(intent);
                     break;
                 case R.id.forget_password:
                     break;
@@ -97,21 +100,25 @@ public class Login extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         Map<String,String>data=sharedHelper.read();
-        enter_username.setText(data.get("username"));
-        enter_password.setText(data.get("password"));
         if (data.get("username").equals("")||data.get("password").equals("")){
+            sharedHelper.save(null,null,null,"0",null);
             checkBox1.setChecked(false);
         }else checkBox1.setChecked(true);
+        String role=data.get("role");
+        int Introle=Integer.parseInt(role);
+        spinner.setSelection(Introle,true);
+        enter_username.setText(data.get("username"));
+        enter_password.setText(data.get("password"));
     }
     private String returnInt(String role){
         if (role.equals("合伙人"))
-            return "0";
-        if (role.equals("部门经理"))
             return "1";
-        if (role.equals("项目经理"))
+        if (role.equals("部门经理"))
             return "2";
-        if (role.equals("员工"))
+        if (role.equals("项目经理"))
             return "3";
+        if (role.equals("员工"))
+            return "4";
         return "-1";
     }
     private void login(final String url, final String userName, final String password, final String role){
@@ -127,12 +134,12 @@ public class Login extends AppCompatActivity {
                 sharedHelper.save(loginData.getUser_id(),loginData.getUser_name(),
                         loginData.getPassword(),loginData.getRole(),loginData.getStatus());
                 Toast.makeText(Login.this,loginData.getUser_id(),Toast.LENGTH_SHORT).show();
-                Intent intent=new Intent(Login.this, MainActivity.class);
-                startActivity(intent);
+
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
+                Toast.makeText(Login.this, "网络连接超时，请检查网络设置", Toast.LENGTH_SHORT).show();
                 Log.i("Login","mwssage:"+volleyError.getMessage());
             }
         }){

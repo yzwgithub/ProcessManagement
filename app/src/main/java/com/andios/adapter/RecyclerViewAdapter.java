@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.andios.activity.R;
+import com.andios.dao.DataOperate;
 import com.andios.dao.HistoryHelper;
 import com.andios.interfaces.OnItemClickListener;
 import com.andios.interfaces.OnLongClickListener;
@@ -27,6 +28,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     private String[] text,string_time,string_details;
     private OnItemClickListener listener;
     private OnLongClickListener longClickListener;
+    private DataOperate dataOperate=new DataOperate();
     public RecyclerViewAdapter(Context context,String[] text,String[]string_time,String []string_details) {
         inflater=LayoutInflater.from(context);
         this.text=text;
@@ -87,5 +89,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     }
     public void setOnLongClickListener(OnLongClickListener longClickListener){
         this.longClickListener=longClickListener;
+    }
+    public void delData(Context context,int position){
+        dataOperate.delete(context,position);
+        notifyItemRemoved(position);
     }
 }

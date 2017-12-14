@@ -12,12 +12,15 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.widget.Toast;
 
-import com.andios.activity.ActivityDetail;
+import com.andios.activity.MapActivity;
 import com.andios.adapter.RecyclerViewAdapter;
 import com.andios.activity.R;
 import com.andios.dao.DataOperate;
@@ -33,7 +36,7 @@ import com.andios.interfaces.OnLongClickListener;
 public class HomeFragment extends Fragment {
     private RecyclerViewAdapter adapter;
     private Cursor cursor;
-    DataOperate dataOperate=new DataOperate();
+    private DataOperate dataOperate=new DataOperate();
     private String[] text,time,details;
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
@@ -43,6 +46,7 @@ public class HomeFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view=inflater.inflate(R.layout.fragement_home,container,false);
+        Log.e("MapActivity","onCreateView方法被调用");
         return view;
     }
     @Override
@@ -51,13 +55,13 @@ public class HomeFragment extends Fragment {
         initToolBar();
         initData();
         initRecyclerView();
-        adapter.setOnItemClickListener(new OnItemClickListener() {
-            @Override
-            public void onItemClick(View view, int position) {
-                Intent intent=new Intent(getActivity(), ActivityDetail.class);
-                startActivity(intent);
-            }
-        });
+//        adapter.setOnItemClickListener(new OnItemClickListener() {
+//            @Override
+//            public void onItemClick(View view, int position) {
+//                Intent intent=new Intent(getActivity(), ActivityDetail.class);
+//                startActivity(intent);
+//            }
+//        });
         adapter.setOnLongClickListener(new OnLongClickListener() {
             AlertDialog.Builder dialog=new AlertDialog.Builder(getContext());
             @Override
@@ -69,8 +73,11 @@ public class HomeFragment extends Fragment {
                     @SuppressWarnings("deprecation")
                     @Override
                     public void onClick(DialogInterface arg0, int arg1) {
-                        dataOperate.delete(getContext(),position);
-                        adapter.notifyDataSetChanged();
+//                        dataOperate.delete(getActivity(),position);
+//                        Toast.makeText(getContext(), "item"+position+1+"被删除", Toast.LENGTH_SHORT).show();
+//                        adapter.notifyItemRemoved(position);
+//                        adapter.notifyItemRangeChanged(position,cursor.getCount());
+                        adapter.delData(getActivity(),position+1);
                     }
                 });
                 dialog.create();
@@ -96,7 +103,6 @@ public class HomeFragment extends Fragment {
             i++;
         }
     }
-
     /**
      * 初始化RecyclerView
      */
@@ -108,7 +114,6 @@ public class HomeFragment extends Fragment {
         recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(),1));
         recyclerView.setAdapter(adapter=new RecyclerViewAdapter(getActivity(),text,time,details));
     }
-
     /**
      * 初始化ToolBar
      */
@@ -116,7 +121,7 @@ public class HomeFragment extends Fragment {
         Toolbar toolbar= (Toolbar) getView().findViewById(R.id.tb_toolbar);
         toolbar.setPopupTheme(R.style.Widget_AppCompat_PopupMenu);
         toolbar.inflateMenu(R.menu.main);
-        toolbar.setTitle("易GO");
+        toolbar.setTitle("阳光会计事务所");
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
@@ -137,5 +142,4 @@ public class HomeFragment extends Fragment {
             }
         });
     }
-
 }

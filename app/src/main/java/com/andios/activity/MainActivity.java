@@ -42,7 +42,6 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationB
         setContentView(R.layout.activity_main);
         initViewPager();
         initBottomNavigation();
-        queryUser("http://192.168.1.138:8080/user/queryUser?");
     }
 
     @Override
@@ -82,9 +81,9 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationB
 
         viewPager = (ViewPager) findViewById(R.id.view_pager);
         fragments = new ArrayList<>();
-        fragments.add(new HomeFragment());
         fragments.add(new DiscoverFragment());
         fragments.add(new UserCentralFragment());
+        fragments.add(new HomeFragment());
         viewPager.setPageTransformer(false, new ViewPager.PageTransformer() {
             @Override
             public void transformPage(View page, float position) {

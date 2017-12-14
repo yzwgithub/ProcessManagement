@@ -9,26 +9,14 @@ public class UserInfo {
     private String info_id;
     private String dept_id;
     private String p_id;
-    private String real_name;
+    private String real_name;//
     private String job;
-    private String positio;
-    private String pracreq;
-    private String phone;
-    private String idcard;
+    private String positio;//
+    private String pracreq;//
+    private String phone;//
+    private String idcard;//
     private String dailysettle;
     private String borrow;
-    public UserInfo(String dept_id, String real_name, String job, String positio,
-                    String pracreq, String phone, String idcard, String dailysettle, String borrow) {
-        this.dept_id = dept_id;
-        this.real_name = real_name;
-        this.job = job;
-        this.positio = positio;
-        this.pracreq = pracreq;
-        this.phone = phone;
-        this.idcard = idcard;
-        this.dailysettle = dailysettle;
-        this.borrow = borrow;
-    }
 
     public String getInfo_id() {
         return info_id;

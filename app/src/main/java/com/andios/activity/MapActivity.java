@@ -2,13 +2,23 @@ package com.andios.activity;
 
 import java.util.List;
 
+import android.Manifest;
 import android.app.AlertDialog;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.Point;
+import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.Settings;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -17,6 +27,7 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.andios.dao.DataOperate;
 import com.andios.listener.MyOrientationListener;
@@ -66,9 +77,10 @@ public class MapActivity extends AppCompatActivity {
 	// 覆盖物相关
 	private BitmapDescriptor mMarker;
 	private RelativeLayout mMarkerLy;
-	DataOperate dataOperate;
-	Cursor cursor;
+	private DataOperate dataOperate;
+	private Cursor cursor;
 	private String Address;
+	final String []permission={"Manifest.permission.ACCESS_COARSE_LOCATION"};
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -200,12 +212,46 @@ public class MapActivity extends AppCompatActivity {
 	protected void onStart()
 	{
 		super.onStart();
+		if (!isOPen(MapActivity.this)){
+			AlertDialog.Builder builder=new AlertDialog.Builder(MapActivity.this);
+			builder.setMessage("定位权限没有打开，是否打开定位权限？");
+			builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					open(MapActivity.this);
+				}
+			}).show();
+		}
 		// 开启定位
 		mBaiduMap.setMyLocationEnabled(true);
 		if (!mLocationClient.isStarted())
 			mLocationClient.start();
 		// 开启方向传感器
 		myOrientationListener.start();
+	}
+
+	/**
+	 * 打开设置权限的页面
+	 * @param mapActivity
+	 */
+	private void open(MapActivity mapActivity) {
+		ActivityCompat.requestPermissions(MapActivity.this,permission,123);
+	}
+
+	/**
+	 * 判断应用权限管理中该应用是否打开了允许使用网络的权限
+	 * -1: 没有打开  0: 已经打开
+	 * @param mapActivity
+	 * @return
+	 */
+	private boolean isOPen(MapActivity mapActivity) {
+		int permissions=ContextCompat.checkSelfPermission(MapActivity.this,"android.permission.ACCESS_COARSE_LOCATION");
+		//int permission = ActivityCompat.checkSelfPermission(getApplicationContext(), "android.permission.ACCESS_COARSE_LOCATION");
+		if (permissions==PackageManager.PERMISSION_GRANTED) {
+			return true;}
+		else {
+			return false;
+		}
 	}
 
 	@Override
@@ -248,43 +294,48 @@ public class MapActivity extends AppCompatActivity {
 	public boolean onOptionsItemSelected(MenuItem item)
 	{
 		switch (item.getItemId()) {
-			case R.id.id_map_common:
-				mBaiduMap.setMapType(BaiduMap.MAP_TYPE_NORMAL);
-				break;
+//			case R.id.id_map_common:
+//				mBaiduMap.setMapType(BaiduMap.MAP_TYPE_NORMAL);
+//				break;
 
 			case R.id.id_map_site:
 				mBaiduMap.setMapType(BaiduMap.MAP_TYPE_SATELLITE);
 				break;
 
-			case R.id.id_map_traffic:
-				if (mBaiduMap.isTrafficEnabled())
-				{
-					mBaiduMap.setTrafficEnabled(false);
-					item.setTitle("实时交通(off)");
-				} else
-				{
-					mBaiduMap.setTrafficEnabled(true);
-					item.setTitle("实时交通(on)");
-				}
-				break;
-			case R.id.id_map_location:
-				centerToMyLocation();
-				break;
-			case R.id.id_map_mode_common:
-				mLocationMode = LocationMode.NORMAL;
-				break;
-			case R.id.id_map_mode_following:
-				mLocationMode = LocationMode.FOLLOWING;
-				break;
-			case R.id.id_map_mode_compass:
-				mLocationMode = LocationMode.COMPASS;
-				break;
-			case R.id.id_add_overlay:
-				addOverlays(Info.infos);
-				break;
+//			case R.id.id_map_traffic:
+//				if (mBaiduMap.isTrafficEnabled())
+//				{
+//					mBaiduMap.setTrafficEnabled(false);
+//					item.setTitle("实时交通(off)");
+//				} else
+//				{
+//					mBaiduMap.setTrafficEnabled(true);
+//					item.setTitle("实时交通(on)");
+//				}
+//				break;
+//			case R.id.id_map_location:
+//				centerToMyLocation();
+//				break;
+//			case R.id.id_map_mode_common:
+//				mLocationMode = LocationMode.NORMAL;
+//				break;
+//			case R.id.id_map_mode_following:
+//				mLocationMode = LocationMode.FOLLOWING;
+//				break;
+//			case R.id.id_map_mode_compass:
+//				mLocationMode = LocationMode.COMPASS;
+//				break;
+//			case R.id.id_add_overlay:
+//				addOverlays(Info.infos);
+//				break;
 			case R.id.id_correct:
-				move();
-				MapActivity.this.finish();
+				if (isOPen(MapActivity.this)&&Constants.signInlocation!=null) {
+					move();
+					MapActivity.this.finish();
+				}else {
+					Toast.makeText(MapActivity.this,"位置获取失败，请检查定位权限是否允许",Toast.LENGTH_SHORT).show();
+					goToSetting();
+				}
 				break;
 			default:
 				break;
@@ -386,6 +437,28 @@ public class MapActivity extends AppCompatActivity {
 		dataOperate=new DataOperate();
 		cursor=dataOperate.select(MapActivity.this);
 		int position=cursor.getCount()+1;
-		dataOperate.insertLocal(MapActivity.this,position,getAddress());
+		dataOperate.insertLocal(MapActivity.this/*,position*/,getAddress());
+		Constants.signInlocation=getAddress();
+	}
+
+	@Override
+	public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+		super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+		if (requestCode==123){
+			if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+				boolean b=shouldShowRequestPermissionRationale(permission[0]);
+				if (!b){
+					Toast.makeText(MapActivity.this,"请手动设置定位权限",Toast.LENGTH_SHORT).show();
+					goToSetting();
+				}else Toast.makeText(MapActivity.this,"权限申请成功",Toast.LENGTH_SHORT).show();
+			}
+		}
+	}
+	private void goToSetting(){
+		Intent intent=new Intent();
+		intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+		Uri uri=Uri.fromParts("package",getPackageName(),null);
+		intent.setData(uri);
+		startActivity(intent);
 	}
 }
