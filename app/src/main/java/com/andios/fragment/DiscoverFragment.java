@@ -94,6 +94,11 @@ public class DiscoverFragment extends Fragment implements View.OnClickListener {
 
     }
 
+    /**
+     * 初始化Spinner
+     * @param context
+     * @param list
+     */
     private void initSpinner(Context context,List <ProjectInfo> list){
         List<String>stringList=new ArrayList<>();
         if (list.size()==0){

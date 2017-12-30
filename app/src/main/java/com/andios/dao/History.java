@@ -41,7 +41,7 @@ public class History extends SQLiteOpenHelper {
 //                " INTEGER primary key autoincrement,"+
 //                HistoryHelper.PROJECT_NAME+
 //                " text);";
-        db.execSQL(sql);
+//        db.execSQL(sql);
 //        db.execSQL(p_id);
     }
 

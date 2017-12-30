@@ -33,7 +33,6 @@ public class RoundImageView extends android.support.v7.widget.AppCompatImageView
         paint=new Paint();
     }
 
-
     @Override
     protected void onDraw(Canvas canvas) {
         Drawable drawable=getDrawable();
