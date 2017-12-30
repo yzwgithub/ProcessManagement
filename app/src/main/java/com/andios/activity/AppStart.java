@@ -20,8 +20,15 @@ public class AppStart extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         getSupportActionBar().hide();
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        final View view = View.inflate(this,R.layout.start_app, null);
+        final View view = View.inflate(AppStart.this,R.layout.start_app, null);
         setContentView(view);
+        alphaAnimation(view);
+    }
+
+    /**
+     * 渐变动画的实现
+     */
+    private void alphaAnimation(View view){
         AlphaAnimation aa = new AlphaAnimation(0.3f,1.0f); //渐变展示启动屏
         aa.setDuration(3000);
         view.startAnimation(aa);
@@ -36,7 +43,6 @@ public class AppStart extends AppCompatActivity {
             public void onAnimationStart(Animation arg0) {}
         });
     }
-
     /**
      * 实现页面跳转
      */

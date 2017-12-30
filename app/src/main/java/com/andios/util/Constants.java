@@ -5,6 +5,9 @@ package com.andios.util;
  */
 
 public class Constants {
+    public static String project_id;
+    public static int size=0;
+    public static int signInOrOut=0;
     public static String signInlocation=null;
-    public static String signOutLocation=null;
+    public static final String url="http://192.168.1.113:8080/";
 }

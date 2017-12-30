@@ -34,14 +34,15 @@ public class History extends SQLiteOpenHelper {
                 HistoryHelper.TIME+" text,"+
                 HistoryHelper.DETAILS+
                 " text);";
-        String sqlLocal="CREATE TABLE "+HistoryHelper.TABLE_NAME_LOCAL+
-                "("+
-                HistoryHelper.ID+
-                " INTEGER primary key autoincrement,"+
-                HistoryHelper.Local+" text,"+
-                " text);";
         db.execSQL(sql);
-        db.execSQL(sqlLocal);
+//        String p_id="CREATE TABLE "+HistoryHelper.TABLE_NAME1+
+//                "("+
+//                HistoryHelper.ID+
+//                " INTEGER primary key autoincrement,"+
+//                HistoryHelper.PROJECT_NAME+
+//                " text);";
+        db.execSQL(sql);
+//        db.execSQL(p_id);
     }
 
     /**
@@ -53,8 +54,8 @@ public class History extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         String sql="DROP TABLE IF EXISTS"+HistoryHelper.TABLE_NAME;
-        String sqlLocal="DROP TABLE IF EXISTS"+HistoryHelper.TABLE_NAME_LOCAL;
+//        String p_id="DROP TABLE IF EXISTS"+HistoryHelper.TABLE_NAME1;
         db.execSQL(sql);
-        db.execSQL(sqlLocal);
+//        db.execSQL(p_id);
     }
 }

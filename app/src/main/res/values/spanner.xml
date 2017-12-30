@@ -9,7 +9,9 @@
         <item>请选择</item>
         <item>合伙人</item>
         <item>部门经理</item>
-        <item>项目经理</item>
-        <item>员工</item>
+        <item>财务经理</item>
+        <item>助理人员</item>
+        <item>办公室主任</item>
+        <item>质量监督部经理</item>
     </string-array>
 </resources>

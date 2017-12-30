@@ -1,110 +1,54 @@
 package com.andios.util;
 
+
 /**
- * Created by YangZheWen on 2017/12/7.
- * 获取用户信息的工具类
+ * Created by ASUS on 2017/12/18.
  */
 
 public class UserInfo {
-    private String info_id;
-    private String dept_id;
-    private String p_id;
-    private String real_name;//
-    private String job;
-    private String positio;//
-    private String pracreq;//
-    private String phone;//
-    private String idcard;//
-    private String dailysettle;
-    private String borrow;
+    private String date;
+    private String afternoon;
+    private String real_name;
+    private String location;
+    private String morning;
 
-    public String getInfo_id() {
-        return info_id;
+    public String getDate() {
+        return date;
     }
 
-    public void setInfo_id(String info_id) {
-        this.info_id = info_id;
+    public void setDate(String date) {
+        this.date = date;
     }
 
-    public String getP_id() {
-        return p_id;
+    public String getAfternoon() {
+        return afternoon;
     }
 
-    public void setP_id(String p_id) {
-        this.p_id = p_id;
-    }
-
-    public void setDept_id(String dept_id) {
-        this.dept_id = dept_id;
-    }
-
-    public void setReal_name(String real_name) {
-        this.real_name = real_name;
-    }
-
-    public void setJob(String job) {
-        this.job = job;
-    }
-
-    public void setPositio(String positio) {
-        this.positio = positio;
-    }
-
-    public void setPracreq(String pracreq) {
-        this.pracreq = pracreq;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    public void setIdcard(String idcard) {
-        this.idcard = idcard;
-    }
-
-    public void setDailysettle(String dailysettle) {
-        this.dailysettle = dailysettle;
-    }
-
-    public void setBorrow(String borrow) {
-        this.borrow = borrow;
-    }
-
-
-    public String getDept_id() {
-        return dept_id;
+    public void setAfternoon(String afternoon) {
+        this.afternoon = afternoon;
     }
 
     public String getReal_name() {
         return real_name;
     }
 
-    public String getJob() {
-        return job;
+    public void setReal_name(String real_name) {
+        this.real_name = real_name;
     }
 
-    public String getPositio() {
-        return positio;
+    public String getLocation() {
+        return location;
     }
 
-    public String getPracreq() {
-        return pracreq;
+    public void setLocation(String location) {
+        this.location = location;
     }
 
-    public String getPhone() {
-        return phone;
+    public String getMorning() {
+        return morning;
     }
 
-    public String getIdcard() {
-        return idcard;
+    public void setMorning(String morning) {
+        this.morning = morning;
     }
-
-    public String getDailysettle() {
-        return dailysettle;
-    }
-
-    public String getBorrow() {
-        return borrow;
-    }
-
 }

@@ -68,13 +68,14 @@
             android:layout_height="wrap_content"
             android:text="@string/JiZhu"
             android:textColor="#FFFFFF"/>
-        <TextView
-            android:id="@+id/forget_password"
+        <!--
+        <CheckBox
+            android:id="@+id/self_login"
             android:layout_weight="1"
             android:layout_width="0dp"
-            android:textColor="#FFFFFF"
             android:layout_height="wrap_content"
-            android:text="@string/forget_password"
-            android:gravity="end"/>
+            android:text="@string/JiZhu"
+            android:textColor="#FFFFFF"/>
+            -->
     </LinearLayout>
 </LinearLayout>

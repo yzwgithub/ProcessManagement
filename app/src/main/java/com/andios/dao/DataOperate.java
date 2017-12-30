@@ -60,18 +60,10 @@ public class DataOperate {
         sqLiteDatabase.delete(HistoryHelper.TABLE_NAME,where,whereValue);
     }
 
-    /**
-     * 向 HistoryHelper.TABLE_NAME表中插入数据
-     * @param context 上下文对象
-     * //@param id id号码
-     * @param local 地点信息
-     */
-    public void insertLocal(Context context/*,int id */,String local){
+    public void delAll(Context context){
         History history=new History(context);
         SQLiteDatabase sqLiteDatabase=history.getWritableDatabase();
-        ContentValues cv = new ContentValues();
-        //cv.put(HistoryHelper.ID,id);
-        cv.put(HistoryHelper.Local,local);
-        sqLiteDatabase.insert(HistoryHelper.TABLE_NAME,null,cv);
+        String sql="DROP TABLE "+HistoryHelper.TABLE_NAME;
+        sqLiteDatabase.execSQL(sql);
     }
 }

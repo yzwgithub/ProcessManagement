@@ -9,23 +9,7 @@
         android:layout_height="wrap_content"
         android:text="@string/sign"
         android:textSize="25dp"/>
-    <!--
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <ImageView
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:src="@drawable/clock"
-            android:scaleType="fitXY" />
-        <Spinner
-            android:id="@+id/spinner"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:entries="@array/spingarr"/>
-    </LinearLayout>
-    -->
+
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
@@ -35,7 +19,7 @@
             android:layout_height="50dp"
             android:src="@drawable/name"
             android:scaleType="fitXY" />
-        <EditText
+        <Spinner
             android:id="@+id/work"
             android:background="@null"
             style="?android:attr/textViewStyle"
@@ -44,8 +28,7 @@
             android:layout_width="0dp"
             android:textSize="20sp"
             android:layout_height="match_parent"
-            android:gravity="center_vertical"
-            android:hint="@string/work"/>
+            android:gravity="center_vertical" />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
@@ -53,6 +36,7 @@
             android:text=" * "
             android:textColor="#FF0000"/>
     </LinearLayout>
+
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
@@ -60,19 +44,17 @@
         <ImageView
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:src="@drawable/name"
+            android:src="@drawable/clock"
             android:scaleType="fitXY" />
-        <EditText
-            android:id="@+id/project_details"
-            android:background="@null"
-            style="?android:attr/textViewStyle"
+        <TextView
+            android:id="@+id/signIn"
             android:layout_marginLeft="10dp"
             android:layout_weight="1"
             android:layout_width="0dp"
             android:textSize="20sp"
             android:layout_height="match_parent"
             android:gravity="center_vertical"
-            android:hint="@string/project_details"/>
+            android:text="@string/signIn"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
@@ -90,14 +72,89 @@
             android:src="@drawable/clock"
             android:scaleType="fitXY" />
         <TextView
-            android:id="@+id/getLocal"
+            android:id="@+id/signOut"
             android:layout_marginLeft="10dp"
             android:layout_weight="1"
             android:layout_width="0dp"
             android:textSize="20sp"
             android:layout_height="match_parent"
             android:gravity="center_vertical"
-            android:text="@string/getLocal"/>
+            android:text="@string/signOut"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text=" * "
+            android:textColor="#FF0000"/>
+    </LinearLayout>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/clock"
+            android:scaleType="fitXY" />
+        <TextView
+            android:id="@+id/Z_details"
+            android:layout_marginLeft="10dp"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:textSize="20sp"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:text="@string/Z_details"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text=" * "
+            android:textColor="#FF0000"/>
+    </LinearLayout>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/clock"
+            android:scaleType="fitXY" />
+        <TextView
+            android:id="@+id/Y_details"
+            android:layout_marginLeft="10dp"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:textSize="20sp"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:text="@string/Y_details"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text=" * "
+            android:textColor="#FF0000"/>
+    </LinearLayout>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/clock"
+            android:scaleType="fitXY" />
+        <TextView
+            android:id="@+id/J_details"
+            android:layout_marginLeft="10dp"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:textSize="20sp"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:text="@string/J_details"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
@@ -109,82 +166,4 @@
         android:id="@+id/local"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <ImageView
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:src="@drawable/time"
-            android:scaleType="fitXY" />
-        <TextView
-            android:id="@+id/textTime"
-            android:layout_marginLeft="10dp"
-            android:layout_weight="1"
-            android:layout_width="0dp"
-            android:textSize="20dp"
-            android:layout_height="match_parent"
-            android:gravity="center_vertical"
-            android:text="获取当前时间"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:text=" * "
-            android:textColor="#FF0000"/>
-    </LinearLayout>
-    <!--
-    <LinearLayout
-        android:id="@+id/img_fback_add"
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <ImageView
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:src="@drawable/camera"
-            android:scaleType="fitXY" />
-        <TextView
-            android:layout_marginLeft="10dp"
-            android:layout_weight="1"
-            android:id="@+id/camera"
-            android:layout_width="0dp"
-            android:textSize="20dp"
-            android:layout_height="match_parent"
-            android:gravity="center_vertical"
-            android:text="@string/getImg"/>
-    </LinearLayout>
-    <GridView
-        android:id="@+id/gv_fback_img"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:scrollbars="none"
-        android:gravity="right"
-        android:layout_gravity="right"
-        android:numColumns="3"/>
-        -->
-    <LinearLayout
-        android:background="@drawable/shap"
-        android:layout_marginTop="40dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-   <Button
-       android:background="@drawable/shap"
-        android:id="@+id/signIn"
-        android:layout_weight="1"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="30dp"
-        android:text="@string/signIn"/>
-        <Button
-            android:background="@drawable/shap"
-            android:layout_weight="1"
-            android:id="@+id/signOut"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="30dp"
-            android:text="@string/signOut"/>
-    </LinearLayout>
 </LinearLayout>

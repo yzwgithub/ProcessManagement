@@ -6,7 +6,6 @@
         android:layout_width="match_parent"
         android:id="@+id/buttom_bar"
         android:layout_gravity="bottom"/>
-
     <android.support.v4.view.ViewPager
         android:id="@+id/view_pager"
         android:layout_width="match_parent"

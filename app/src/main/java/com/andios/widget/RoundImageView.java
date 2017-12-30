@@ -13,7 +13,7 @@ import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 
 /**
- * Created by YangZheWen on 2017/10/24.
+ *
  * 自定义圆形ImageView
  */
 

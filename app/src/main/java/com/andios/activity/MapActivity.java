@@ -1,18 +1,12 @@
 package com.andios.activity;
 
-import java.util.List;
-
-import android.Manifest;
 import android.app.AlertDialog;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.Point;
-import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -20,6 +14,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -29,10 +24,17 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.andios.dao.DataOperate;
 import com.andios.listener.MyOrientationListener;
 import com.andios.util.Constants;
-import com.andios.util.Info;
+import com.andios.util.LocalInfo;
+import com.andios.util.SharedHelper;
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
@@ -49,12 +51,13 @@ import com.baidu.mapapi.map.MapStatusUpdate;
 import com.baidu.mapapi.map.MapStatusUpdateFactory;
 import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.Marker;
-import com.baidu.mapapi.map.MarkerOptions;
 import com.baidu.mapapi.map.MyLocationConfiguration;
 import com.baidu.mapapi.map.MyLocationConfiguration.LocationMode;
 import com.baidu.mapapi.map.MyLocationData;
-import com.baidu.mapapi.map.OverlayOptions;
 import com.baidu.mapapi.model.LatLng;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by YangZheWen on 2017/10/23.
@@ -63,22 +66,16 @@ public class MapActivity extends AppCompatActivity {
 	private MapView mMapView;
 	private BaiduMap mBaiduMap;
 	private Context context;
-	// 定位相关
 	private LocationClient mLocationClient;
 	private MyLocationListener mLocationListener;
 	private boolean isFirstIn = true;
 	private double mLatitude;
 	private double mLongtitude;
-	// 自定义定位图标
 	private BitmapDescriptor mIconLocation;
 	private MyOrientationListener myOrientationListener;
 	private float mCurrentX;
 	private LocationMode mLocationMode;
-	// 覆盖物相关
-	private BitmapDescriptor mMarker;
 	private RelativeLayout mMarkerLy;
-	private DataOperate dataOperate;
-	private Cursor cursor;
 	private String Address;
 	final String []permission={"Manifest.permission.ACCESS_COARSE_LOCATION"};
 
@@ -109,7 +106,7 @@ public class MapActivity extends AppCompatActivity {
 			public boolean onMarkerClick(Marker marker)
 			{
 				Bundle extraInfo = marker.getExtraInfo();
-				Info info = (Info) extraInfo.getSerializable("info");
+				LocalInfo localInfo = (LocalInfo) extraInfo.getSerializable("localInfo");
 				ImageView iv = (ImageView) mMarkerLy
 						.findViewById(R.id.id_info_img);
 				TextView distance = (TextView) mMarkerLy
@@ -118,15 +115,15 @@ public class MapActivity extends AppCompatActivity {
 						.findViewById(R.id.id_info_name);
 				TextView zan = (TextView) mMarkerLy
 						.findViewById(R.id.id_info_zan);
-				iv.setImageResource(info.getImgId());
-				distance.setText(info.getDistance());
-				name.setText(info.getName());
-				zan.setText(info.getZan() + "");
+				iv.setImageResource(localInfo.getImgId());
+				distance.setText(localInfo.getDistance());
+				name.setText(localInfo.getName());
+				zan.setText(localInfo.getZan() + "");
 				InfoWindow infoWindow;
 				TextView tv = new TextView(context);
 				tv.setBackgroundResource(R.drawable.location_tips);
 				tv.setPadding(30, 20, 30, 50);
-				tv.setText(info.getName());
+				tv.setText(localInfo.getName());
 				tv.setTextColor(Color.parseColor("#ffffff"));
 				final LatLng latLng = marker.getPosition();
 				Point p = mBaiduMap.getProjection().toScreenLocation(latLng);
@@ -159,7 +156,6 @@ public class MapActivity extends AppCompatActivity {
 
 	private void initMarker()
 	{
-		mMarker = BitmapDescriptorFactory.fromResource(R.drawable.maker);
 		mMarkerLy = (RelativeLayout) findViewById(R.id.id_maker_ly);
 	}
 
@@ -246,7 +242,6 @@ public class MapActivity extends AppCompatActivity {
 	 */
 	private boolean isOPen(MapActivity mapActivity) {
 		int permissions=ContextCompat.checkSelfPermission(MapActivity.this,"android.permission.ACCESS_COARSE_LOCATION");
-		//int permission = ActivityCompat.checkSelfPermission(getApplicationContext(), "android.permission.ACCESS_COARSE_LOCATION");
 		if (permissions==PackageManager.PERMISSION_GRANTED) {
 			return true;}
 		else {
@@ -294,43 +289,17 @@ public class MapActivity extends AppCompatActivity {
 	public boolean onOptionsItemSelected(MenuItem item)
 	{
 		switch (item.getItemId()) {
-//			case R.id.id_map_common:
-//				mBaiduMap.setMapType(BaiduMap.MAP_TYPE_NORMAL);
-//				break;
+			case R.id.id_map_common:
+				mBaiduMap.setMapType(BaiduMap.MAP_TYPE_NORMAL);
+				break;
 
 			case R.id.id_map_site:
 				mBaiduMap.setMapType(BaiduMap.MAP_TYPE_SATELLITE);
 				break;
-
-//			case R.id.id_map_traffic:
-//				if (mBaiduMap.isTrafficEnabled())
-//				{
-//					mBaiduMap.setTrafficEnabled(false);
-//					item.setTitle("实时交通(off)");
-//				} else
-//				{
-//					mBaiduMap.setTrafficEnabled(true);
-//					item.setTitle("实时交通(on)");
-//				}
-//				break;
-//			case R.id.id_map_location:
-//				centerToMyLocation();
-//				break;
-//			case R.id.id_map_mode_common:
-//				mLocationMode = LocationMode.NORMAL;
-//				break;
-//			case R.id.id_map_mode_following:
-//				mLocationMode = LocationMode.FOLLOWING;
-//				break;
-//			case R.id.id_map_mode_compass:
-//				mLocationMode = LocationMode.COMPASS;
-//				break;
-//			case R.id.id_add_overlay:
-//				addOverlays(Info.infos);
-//				break;
 			case R.id.id_correct:
 				if (isOPen(MapActivity.this)&&Constants.signInlocation!=null) {
-					move();
+					signInOrOut(MapActivity.this,signInOrOut());
+					setAddress();
 					MapActivity.this.finish();
 				}else {
 					Toast.makeText(MapActivity.this,"位置获取失败，请检查定位权限是否允许",Toast.LENGTH_SHORT).show();
@@ -342,45 +311,6 @@ public class MapActivity extends AppCompatActivity {
 		}
 
 		return super.onOptionsItemSelected(item);
-	}
-
-	/**
-	 * 添加覆盖物
-	 *
-	 * @param infos
-	 */
-	private void addOverlays(List<Info> infos)
-	{
-		mBaiduMap.clear();
-		LatLng latLng = null;
-		Marker marker = null;
-		OverlayOptions options;
-		for (Info info : infos)
-		{
-			// 经纬度
-			latLng = new LatLng(info.getLatitude(), info.getLongitude());
-			// 图标
-			options = new MarkerOptions().position(latLng).icon(mMarker)
-					.zIndex(5);
-			marker = (Marker) mBaiduMap.addOverlay(options);
-			Bundle arg0 = new Bundle();
-			arg0.putSerializable("info", info);
-			marker.setExtraInfo(arg0);
-		}
-
-		MapStatusUpdate msu = MapStatusUpdateFactory.newLatLng(latLng);
-		mBaiduMap.setMapStatus(msu);
-
-	}
-
-	/**
-	 * 定位到我的位置
-	 */
-	private void centerToMyLocation()
-	{
-		LatLng latLng = new LatLng(mLatitude, mLongtitude);
-		MapStatusUpdate msu = MapStatusUpdateFactory.newLatLng(latLng);
-		mBaiduMap.animateMapStatus(msu);
 	}
 
 	private class MyLocationListener implements BDLocationListener {
@@ -414,11 +344,12 @@ public class MapActivity extends AppCompatActivity {
 				mBaiduMap.animateMapStatus(msu);
 				isFirstIn = false;
 				AlertDialog.Builder dialog=new AlertDialog.Builder(MapActivity.this);
-				dialog.setMessage("位置获取成功，是否返回？");
+				dialog.setMessage("位置到获取"+getAddress()+"，是否确认签到？");
 				dialog.setPositiveButton("确定", new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
-						move();
+						signInOrOut(MapActivity.this,signInOrOut());
+						setAddress();
 						MapActivity.this.finish();
 					}
 				});
@@ -433,11 +364,8 @@ public class MapActivity extends AppCompatActivity {
 	public String getAddress() {
 		return Address;
 	}
-	public void move(){
-		dataOperate=new DataOperate();
-		cursor=dataOperate.select(MapActivity.this);
-		int position=cursor.getCount()+1;
-		dataOperate.insertLocal(MapActivity.this/*,position*/,getAddress());
+
+	public void setAddress(){
 		Constants.signInlocation=getAddress();
 	}
 
@@ -454,11 +382,61 @@ public class MapActivity extends AppCompatActivity {
 			}
 		}
 	}
+
+	/**
+	 * 跳转到设置权限的界面
+	 */
 	private void goToSetting(){
 		Intent intent=new Intent();
 		intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
 		Uri uri=Uri.fromParts("package",getPackageName(),null);
 		intent.setData(uri);
 		startActivity(intent);
+		MapActivity.this.finish();
+	}
+
+	/**
+	 * 签退的方法
+	 * @param context
+	 * @param url
+	 */
+	private void signInOrOut(final Context context, String url){
+		StringRequest request=new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+			@Override
+			public void onResponse(String s) {
+				Toast.makeText(context,s,Toast.LENGTH_SHORT).show();
+				Log.i("as","-----------------------------------------------------------");
+			}
+		}, new Response.ErrorListener() {
+			@Override
+			public void onErrorResponse(VolleyError volleyError) {
+				Log.i("as","错误是"+volleyError.getMessage());
+			}
+		}){
+			@Override
+			protected Map<String, String> getParams() throws AuthFailureError {
+				SharedHelper sharedHelper=new SharedHelper(context);
+				Map<String,String>data=sharedHelper.read();
+				Map<String,String>map=new HashMap<>();
+				map.put("user_id",data.get("user_id"));
+				map.put("location",getAddress() /*Constants.signInlocation*/);
+				map.put("p_id",Constants.project_id);
+				return map;
+			}
+		};
+		RequestQueue queue= Volley.newRequestQueue(context);
+		queue.add(request);
+	}
+
+	/**
+	 * 通过判断签到还是签退获取对应的URL
+	 * @return
+	 */
+	private String signInOrOut(){
+		String url;
+		if (Constants.signInOrOut==0){
+			url=Constants.url+"phone/signIn";
+		}else url=Constants.url+"phone/signOut";
+		return url;
 	}
 }

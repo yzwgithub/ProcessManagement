@@ -30,6 +30,12 @@ public class SharedHelper {
         editor.commit();
     }
 
+    public void save(String project_id){
+        SharedPreferences sp = mContext.getSharedPreferences("mysp", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putString("project_id",project_id);
+        editor.commit();
+    }
     //定义一个读取SP文件的方法
     public Map<String, String> read() {
         Map<String, String> data = new HashMap<String, String>();
@@ -39,6 +45,12 @@ public class SharedHelper {
         data.put("user_id", sp.getString("user_id", ""));
         data.put("role", sp.getString("role", ""));
         data.put("status", sp.getString("status", ""));
+        return data;
+    }
+    public Map<String,String> read_(){
+        Map<String, String> data = new HashMap<String, String>();
+        SharedPreferences sp = mContext.getSharedPreferences("mysp", Context.MODE_PRIVATE);
+        data.put("project_id", sp.getString("project_id", ""));
         return data;
     }
 }

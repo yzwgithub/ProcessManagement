@@ -1,7 +1,6 @@
 package com.andios.adapter;
 
 import android.content.Context;
-import android.database.Cursor;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,13 +10,8 @@ import android.widget.TextView;
 
 import com.andios.activity.R;
 import com.andios.dao.DataOperate;
-import com.andios.dao.HistoryHelper;
 import com.andios.interfaces.OnItemClickListener;
 import com.andios.interfaces.OnLongClickListener;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-
 
 /**
  * Created by YangZheWen on 2017/6/13.
@@ -84,14 +78,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             return true;
         }
     }
-    public void setOnItemClickListener(OnItemClickListener listener){
-        this.listener=listener;
-    }
-    public void setOnLongClickListener(OnLongClickListener longClickListener){
-        this.longClickListener=longClickListener;
-    }
-    public void delData(Context context,int position){
-        dataOperate.delete(context,position);
-        notifyItemRemoved(position);
-    }
+//    public void setOnItemClickListener(OnItemClickListener listener){
+//        this.listener=listener;
+//    }
+//    public void setOnLongClickListener(OnLongClickListener longClickListener){
+//        this.longClickListener=longClickListener;
+//    }
 }

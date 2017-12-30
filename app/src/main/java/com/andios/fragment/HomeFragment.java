@@ -1,32 +1,39 @@
 package com.andios.fragment;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
-import android.content.Intent;
+import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
 
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
 import android.widget.Toast;
 
-import com.andios.activity.MapActivity;
+import com.andios.activity.MainActivity;
 import com.andios.adapter.RecyclerViewAdapter;
 import com.andios.activity.R;
 import com.andios.dao.DataOperate;
 import com.andios.dao.HistoryHelper;
-import com.andios.interfaces.OnItemClickListener;
-import com.andios.interfaces.OnLongClickListener;
+import com.andios.util.Constants;
+import com.andios.util.SharedHelper;
+import com.andios.util.UserInfo;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -38,6 +45,8 @@ public class HomeFragment extends Fragment {
     private Cursor cursor;
     private DataOperate dataOperate=new DataOperate();
     private String[] text,time,details;
+    private SwipeRefreshLayout refreshLayout;
+
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
@@ -46,63 +55,26 @@ public class HomeFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view=inflater.inflate(R.layout.fragement_home,container,false);
-        Log.e("MapActivity","onCreateView方法被调用");
         return view;
     }
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        initToolBar();
+        getData();
         initData();
         initRecyclerView();
-//        adapter.setOnItemClickListener(new OnItemClickListener() {
-//            @Override
-//            public void onItemClick(View view, int position) {
-//                Intent intent=new Intent(getActivity(), ActivityDetail.class);
-//                startActivity(intent);
-//            }
-//        });
-        adapter.setOnLongClickListener(new OnLongClickListener() {
-            AlertDialog.Builder dialog=new AlertDialog.Builder(getContext());
+        refreshLayout= (SwipeRefreshLayout) getView().findViewById(R.id.swipe);
+        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
-            public boolean onLongClick(View view, final int position) {
-                dialog.setTitle("删除");
-                dialog.setIcon(R.drawable.img);
-                dialog.setPositiveButton("确定", new  DialogInterface.OnClickListener() {
-
-                    @SuppressWarnings("deprecation")
-                    @Override
-                    public void onClick(DialogInterface arg0, int arg1) {
-//                        dataOperate.delete(getActivity(),position);
-//                        Toast.makeText(getContext(), "item"+position+1+"被删除", Toast.LENGTH_SHORT).show();
-//                        adapter.notifyItemRemoved(position);
-//                        adapter.notifyItemRangeChanged(position,cursor.getCount());
-                        adapter.delData(getActivity(),position+1);
-                    }
-                });
-                dialog.create();
-                dialog.show();
-                return true;
+            public void onRefresh() {
+                cursor=dataOperate.select(getContext());
+                queryPerson(getContext(),cursor.getCount());
+                refreshLayout.setRefreshing(false);
+                MainActivity.fragmentUpdate();
             }
         });
     }
 
-    /**
-     * 初始化数据
-     */
-    private void initData(){
-        cursor=dataOperate.select(getContext());
-        text=new String[cursor.getCount()];
-        time=new String[cursor.getCount()];
-        details=new String[cursor.getCount()];
-        int i=0;
-        while (cursor.moveToNext()){
-            text[i]=cursor.getString(cursor.getColumnIndex(HistoryHelper.PROJECT_NAME));
-            time[i]=cursor.getString(cursor.getColumnIndex(HistoryHelper.TIME));
-            details[i]=cursor.getString(cursor.getColumnIndex(HistoryHelper.DETAILS));
-            i++;
-        }
-    }
     /**
      * 初始化RecyclerView
      */
@@ -114,32 +86,65 @@ public class HomeFragment extends Fragment {
         recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(),1));
         recyclerView.setAdapter(adapter=new RecyclerViewAdapter(getActivity(),text,time,details));
     }
+
     /**
-     * 初始化ToolBar
+     * 获取签到记录
+     * @param context
+     * @param start
      */
-    private void initToolBar(){
-        Toolbar toolbar= (Toolbar) getView().findViewById(R.id.tb_toolbar);
-        toolbar.setPopupTheme(R.style.Widget_AppCompat_PopupMenu);
-        toolbar.inflateMenu(R.menu.main);
-        toolbar.setTitle("阳光会计事务所");
-        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+    private void queryPerson(final Context context,int start){
+        SharedHelper sharedHelper=new SharedHelper(context);
+        Map<String,String> data=sharedHelper.read();
+        final String url= Constants.url+"attendance/queryPerson?user_id="+data.get("user_id")+"&start="+start;
+        StringRequest request=new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                switch (item.getItemId()){
-                    case R.id.search:
-                        break;
-                    case  R.id.action_item1:
-                        break;
-                    case R.id.action_item2:
-                        break;
+            public void onResponse(String s) {
+                Gson gson=new Gson();
+                List<UserInfo>list=gson.fromJson(s,new TypeToken<List<UserInfo>>(){}.getType());
+                UserInfo[] userInfos=new UserInfo[list.size()];
+                for (int i=0;i<list.size();i++){
+                    userInfos[i]=list.get(i);
+                    if (userInfos[i].getAfternoon()!=null) {
+                        dataOperate.insert(context, null, userInfos[i].getReal_name(), userInfos[i].getDate(), userInfos[i].getLocation());
+                    }
                 }
-                return true;
             }
-        });
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+        }, new Response.ErrorListener() {
             @Override
-            public void onClick(View v) {
+            public void onErrorResponse(VolleyError volleyError) {
+
             }
         });
+        Volley.newRequestQueue(context).add(request);
+    }
+
+    /**
+     * 初始化数据，从本地缓存中获取数据
+     */
+    private void initData(){
+        cursor=dataOperate.select(getContext());
+        text=new String[cursor.getCount()];
+        time=new String[cursor.getCount()];
+        details=new String[cursor.getCount()];
+        int i=0;
+        if (cursor.moveToLast()){
+            do{
+                text[i]=cursor.getString(cursor.getColumnIndex(HistoryHelper.PROJECT_NAME));
+                time[i]=cursor.getString(cursor.getColumnIndex(HistoryHelper.TIME));
+                details[i]=cursor.getString(cursor.getColumnIndex(HistoryHelper.DETAILS));
+                i++;
+            }while (cursor.moveToPrevious());
+        }
+    }
+
+    /**
+     * 从网络上获取个人签到记录
+     */
+    private void getData(){
+        cursor=dataOperate.select(getContext());
+        int count=cursor.getCount();
+        if (count==0) {
+            queryPerson(getContext(), count);
+        }else return;
     }
 }
