@@ -97,6 +97,7 @@ public class Login extends AppCompatActivity {
                     }
                     else {sharedHelper.save(null, null,null,"-1",null);}
                     login(Login.this,username,password,returnInt(role));
+                    Constants.username=username;
                     break;
             }
         }
@@ -110,6 +111,9 @@ public class Login extends AppCompatActivity {
             checkBox1.setChecked(false);
         }else checkBox1.setChecked(true);
         String role=data.get("role");
+        if (data.get("role").equals("")){
+            role="-1";
+        }
         int Introle=Integer.parseInt(role);
         spinner.setSelection(Introle+1,true);
         enter_username.setText(data.get("username"));

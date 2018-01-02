@@ -6,6 +6,11 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.andios.util.Constants;
+import com.andios.util.SharedHelper;
+
+import java.util.Map;
+
 /**
  * Created by YangZheWen 2017/11/21.
  * 数据库操作类
@@ -32,6 +37,7 @@ public class DataOperate {
         cv.put(HistoryHelper.TIME,date);
         cv.put(HistoryHelper.DETAILS,details);
         sqLiteDatabase.insert(HistoryHelper.TABLE_NAME,null,cv);
+        sqLiteDatabase.close();
     }
 
     /**
@@ -40,15 +46,17 @@ public class DataOperate {
      * @return
      */
     public Cursor select(Context context){
+        SharedHelper sharedHelper=new SharedHelper(context);
+        Map<String,String> data=sharedHelper.read();
         History history=new History(context);
         SQLiteDatabase sqLiteDatabase=history.getWritableDatabase();
-        Cursor cursor=sqLiteDatabase.query(HistoryHelper.TABLE_NAME,null,null,
-                null,null,null,null);
+        Cursor cursor=sqLiteDatabase.query(HistoryHelper.TABLE_NAME,null,HistoryHelper.IsGoToWork+"=?",
+                new String [] {Constants.username},null,null,null);
         return cursor;
     }
 
     /**
-     * 删除数据
+     * 删除一条数据
      * @param context
      * @param position
      */
@@ -60,10 +68,15 @@ public class DataOperate {
         sqLiteDatabase.delete(HistoryHelper.TABLE_NAME,where,whereValue);
     }
 
+    /**
+     * 清空数据
+     * @param context
+     */
     public void delAll(Context context){
         History history=new History(context);
         SQLiteDatabase sqLiteDatabase=history.getWritableDatabase();
-        String sql="DROP TABLE "+HistoryHelper.TABLE_NAME;
+        String sql="DELETE FROM "+HistoryHelper.TABLE_NAME;
         sqLiteDatabase.execSQL(sql);
+        sqLiteDatabase.close();
     }
 }

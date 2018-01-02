@@ -160,14 +160,14 @@ public class DiscoverFragment extends Fragment implements View.OnClickListener {
                 for (int i=0;i<30;i=i+5){
                     queryPerson(getContext(),i);
                 }
-                local.setText("近10天签到了"+data_.get("project_id")+"次");
+                local.setText("近30天签到了"+data_.get("project_id")+"次");
                 break;
             case R.id.J_details:
                 sharedHelper.save("0");
                 for (int i=0;i<90;i=i+5){
                     queryPerson(getContext(),i);
                 }
-                local.setText("近10天签到了"+data_.get("project_id")+"次");
+                local.setText("近一个季度签到了"+data_.get("project_id")+"次");
                 break;
         }
     }

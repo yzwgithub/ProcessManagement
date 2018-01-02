@@ -6,7 +6,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 
 /**
- * Created by YANGZHEWEN 2017/11/21.
+ * Created by YangZheWen 2017/11/21.
  * 数据库创建
  */
 
@@ -35,14 +35,6 @@ public class History extends SQLiteOpenHelper {
                 HistoryHelper.DETAILS+
                 " text);";
         db.execSQL(sql);
-//        String p_id="CREATE TABLE "+HistoryHelper.TABLE_NAME1+
-//                "("+
-//                HistoryHelper.ID+
-//                " INTEGER primary key autoincrement,"+
-//                HistoryHelper.PROJECT_NAME+
-//                " text);";
-//        db.execSQL(sql);
-//        db.execSQL(p_id);
     }
 
     /**
@@ -54,8 +46,6 @@ public class History extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         String sql="DROP TABLE IF EXISTS"+HistoryHelper.TABLE_NAME;
-//        String p_id="DROP TABLE IF EXISTS"+HistoryHelper.TABLE_NAME1;
         db.execSQL(sql);
-//        db.execSQL(p_id);
     }
 }

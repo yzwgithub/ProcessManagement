@@ -81,7 +81,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 //    public void setOnItemClickListener(OnItemClickListener listener){
 //        this.listener=listener;
 //    }
-//    public void setOnLongClickListener(OnLongClickListener longClickListener){
-//        this.longClickListener=longClickListener;
-//    }
+    public void setOnLongClickListener(OnLongClickListener longClickListener){
+        this.longClickListener=longClickListener;
+    }
 }

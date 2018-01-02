@@ -21,6 +21,7 @@ import com.andios.adapter.RecyclerViewAdapter;
 import com.andios.activity.R;
 import com.andios.dao.DataOperate;
 import com.andios.dao.HistoryHelper;
+import com.andios.interfaces.OnLongClickListener;
 import com.andios.util.Constants;
 import com.andios.util.SharedHelper;
 import com.andios.util.UserInfo;
@@ -105,7 +106,7 @@ public class HomeFragment extends Fragment {
                 for (int i=0;i<list.size();i++){
                     userInfos[i]=list.get(i);
                     if (userInfos[i].getAfternoon()!=null) {
-                        dataOperate.insert(context, null, userInfos[i].getReal_name(), userInfos[i].getDate(), userInfos[i].getLocation());
+                        dataOperate.insert(context, Constants.username, userInfos[i].getReal_name(), userInfos[i].getDate(), userInfos[i].getLocation());
                     }
                 }
             }
@@ -146,5 +147,13 @@ public class HomeFragment extends Fragment {
         if (count==0) {
             queryPerson(getContext(), count);
         }else return;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (cursor.getCount()>100){
+            dataOperate.delAll(getContext());
+        }
     }
 }
