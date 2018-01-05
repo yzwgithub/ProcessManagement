@@ -1,5 +1,6 @@
 package com.andios.activity;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -96,7 +97,6 @@ public class MapActivity extends AppCompatActivity {
 		setContentView(R.layout.activity_map);
 		this.context = this;
 		initView();
-		//initToolBar();
 		// 初始化定位
 		initLocation();
 		initMarker();
@@ -373,7 +373,7 @@ public class MapActivity extends AppCompatActivity {
 	public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
 		super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 		if (requestCode==123){
-			if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+			if (android.os.Build.VERSION.SDK_INT > android.os.Build.VERSION_CODES.M) {
 				boolean b=shouldShowRequestPermissionRationale(permission[0]);
 				if (!b){
 					Toast.makeText(MapActivity.this,"请手动设置定位权限",Toast.LENGTH_SHORT).show();
@@ -404,7 +404,7 @@ public class MapActivity extends AppCompatActivity {
 		StringRequest request=new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
 			@Override
 			public void onResponse(String s) {
-				Toast.makeText(context,s,Toast.LENGTH_SHORT).show();
+				Toast.makeText(context,Constants.signIn+"成功",Toast.LENGTH_SHORT).show();
 				Log.i("as","-----------------------------------------------------------");
 			}
 		}, new Response.ErrorListener() {
@@ -436,7 +436,11 @@ public class MapActivity extends AppCompatActivity {
 		String url;
 		if (Constants.signInOrOut==0){
 			url=Constants.url+"phone/signIn";
-		}else url=Constants.url+"phone/signOut";
+			Constants.signIn="签到";
+		}else {
+			url = Constants.url + "phone/signOut";
+			Constants.signIn="签退";
+		}
 		return url;
 	}
 }

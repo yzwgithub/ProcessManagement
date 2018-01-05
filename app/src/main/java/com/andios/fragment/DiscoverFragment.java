@@ -13,10 +13,10 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.andios.activity.MapActivity;
 import com.andios.activity.R;
+import com.andios.util.ButtonUtil;
 import com.andios.util.Constants;
 import com.andios.util.ProjectInfo;
 import com.andios.util.SharedHelper;
@@ -72,6 +72,9 @@ public class DiscoverFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onStart() {
         super.onStart();
+        sharedHelper=new SharedHelper(getContext());
+        sharedHelper.save("0");
+        queryPerson(getContext(),0);
     }
 
     /**
@@ -105,8 +108,9 @@ public class DiscoverFragment extends Fragment implements View.OnClickListener {
             stringList.add("无项目");
         }else {
             for (int i = 0; i < list.size(); i++) {
-                stringList.add(list.get(i).getP_id());
+                stringList.add(list.get(i).getP_id()+":"+list.get(i).getP_name());
             }
+            stringList.add("无项目");
         }
         ArrayAdapter<String>adapter=new ArrayAdapter<String>(context,android.R.layout.simple_spinner_item,stringList);
         adapter.setDropDownViewResource(android.R.layout.simple_list_item_single_choice);
@@ -123,51 +127,64 @@ public class DiscoverFragment extends Fragment implements View.OnClickListener {
         Map<String,String>data_=sharedHelper.read_();
         switch(v.getId()){
             case R.id.signIn:
-                if (editText.getSelectedItem().toString().equals("")){
-                    Toast.makeText(getContext(), "项目代号不能为空！", Toast.LENGTH_SHORT).show();
-                    break;
+                if (editText.getSelectedItem().toString().equals("无项目")){
+                    Constants.project_id="-1";
+                }else {
+                    Constants.project_id = getNumber(editText.getSelectedItem().toString());
                 }
-                Constants.project_id=editText.getSelectedItem().toString();
-                Constants.signInOrOut=0;
+                Constants.signInOrOut = 0;
                 intent();
                 break;
             case R.id.signOut:
-                if (editText.getSelectedItem().toString().equals("")){
-                    Toast.makeText(getContext(), "项目代号不能为空！", Toast.LENGTH_SHORT).show();
-                    break;
+                if (editText.getSelectedItem().toString().equals("无项目")){
+                    Constants.project_id="-1";
+                }else {
+                    Constants.project_id = getNumber(editText.getSelectedItem().toString());
                 }
-                AlertDialog.Builder builder=new AlertDialog.Builder(getContext());
-                builder.setMessage("当前时间为:"+getTime()+"是否确认签退");
-                builder.setPositiveButton("确认", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        Constants.project_id=editText.getSelectedItem().toString();
-                        Constants.signInOrOut=1;
-                        intent();
-                    }
-                });
-                builder.show();
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                    builder.setMessage("当前时间为:" + getTime() + "是否确认签退");
+                    builder.setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Constants.signInOrOut = 1;
+                            intent();
+                        }
+                    });
+                    builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                        }
+                    });
+                    builder.show();
+
                 break;
             case R.id.Z_details:
-                sharedHelper.save("0");
-                for (int i=0;i<10;i=i+5){
-                    queryPerson(getContext(),i);
+                if (ButtonUtil.isFastClick()){
+                    sharedHelper.save("0");
+                    for (int i=0;i<10;i=i+5){
+                        queryPerson(getContext(),i);
+                    }
+                    local.setText("近10天签到了"+data_.get("project_id")+"次");
                 }
-                local.setText("近10天签到了"+data_.get("project_id")+"次");
                 break;
             case R.id.Y_details:
-                sharedHelper.save("0");
-                for (int i=0;i<30;i=i+5){
-                    queryPerson(getContext(),i);
+                if (ButtonUtil.isFastClick()) {
+                    sharedHelper.save("0");
+                    for (int i = 0; i < 30; i = i + 5) {
+                        queryPerson(getContext(), i);
+                    }
+                    local.setText("近30天签到了"+data_.get("project_id")+"次");
                 }
-                local.setText("近30天签到了"+data_.get("project_id")+"次");
                 break;
             case R.id.J_details:
-                sharedHelper.save("0");
-                for (int i=0;i<90;i=i+5){
-                    queryPerson(getContext(),i);
+                if (ButtonUtil.isFastClick()) {
+                    sharedHelper.save("0");
+                    for (int i=0;i<90;i=i+5){
+                        queryPerson(getContext(),i);
+                    }
+                    local.setText("近一个季度签到了"+data_.get("project_id")+"次");
                 }
-                local.setText("近一个季度签到了"+data_.get("project_id")+"次");
                 break;
         }
     }
@@ -209,6 +226,7 @@ public class DiscoverFragment extends Fragment implements View.OnClickListener {
 
             }
         });
+        request.setTag("queryPerson");
         Volley.newRequestQueue(context).add(request);
     }
 
@@ -224,7 +242,6 @@ public class DiscoverFragment extends Fragment implements View.OnClickListener {
         StringRequest request=new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String s) {
-                sharedHelper=new SharedHelper(context);
                 Gson gson=new Gson();
                 List<ProjectInfo> list=gson.fromJson(s,new TypeToken<List<ProjectInfo>>(){}.getType());
                 initSpinner(context,list);
@@ -247,4 +264,15 @@ public class DiscoverFragment extends Fragment implements View.OnClickListener {
             String str=format.format(date);
             return str;
         }
+
+    private String getNumber(String str){
+        char[]a=str.toCharArray();
+        String c="";
+        char b=':';
+        for(int i=0;i<a.length;i++){
+            if (a[i]==b)break;
+            c=c+a[i];
+        }
+        return c;
+    }
 }

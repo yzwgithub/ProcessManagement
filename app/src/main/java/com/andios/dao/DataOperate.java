@@ -50,6 +50,16 @@ public class DataOperate {
         Map<String,String> data=sharedHelper.read();
         History history=new History(context);
         SQLiteDatabase sqLiteDatabase=history.getWritableDatabase();
+        Cursor cursor=sqLiteDatabase.query(HistoryHelper.TABLE_NAME,null,/*HistoryHelper.IsGoToWork+"=?"*/null,
+                /*new String [] {Constants.username}*/null,null,null,null);
+        return cursor;
+    }
+
+    public Cursor select_(Context context){
+        SharedHelper sharedHelper=new SharedHelper(context);
+        Map<String,String> data=sharedHelper.read();
+        History history=new History(context);
+        SQLiteDatabase sqLiteDatabase=history.getWritableDatabase();
         Cursor cursor=sqLiteDatabase.query(HistoryHelper.TABLE_NAME,null,HistoryHelper.IsGoToWork+"=?",
                 new String [] {Constants.username},null,null,null);
         return cursor;

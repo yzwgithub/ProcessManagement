@@ -23,4 +23,12 @@ public class ProjectInfo {
     public void setP_name(String p_name) {
         this.p_name = p_name;
     }
+
+    @Override
+    public String toString() {
+        return "ProjectInfo{" +
+                "p_id='" + p_id + '\'' +
+                ", p_name='" + p_name + '\'' +
+                '}';
+    }
 }

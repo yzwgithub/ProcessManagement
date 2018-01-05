@@ -123,7 +123,7 @@ public class HomeFragment extends Fragment {
      * 初始化数据，从本地缓存中获取数据
      */
     private void initData(){
-        cursor=dataOperate.select(getContext());
+        cursor=dataOperate.select_(getContext());
         text=new String[cursor.getCount()];
         time=new String[cursor.getCount()];
         details=new String[cursor.getCount()];
@@ -142,7 +142,7 @@ public class HomeFragment extends Fragment {
      * 从网络上获取个人签到记录
      */
     private void getData(){
-        cursor=dataOperate.select(getContext());
+        cursor=dataOperate.select_(getContext());
         int count=cursor.getCount();
         if (count==0) {
             queryPerson(getContext(), count);

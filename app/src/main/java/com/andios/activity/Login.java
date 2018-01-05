@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.andios.util.ButtonUtil;
 import com.andios.util.Constants;
 import com.andios.util.LoginInfo;
 import com.andios.util.ProjectInfo;
@@ -96,8 +97,10 @@ public class Login extends AppCompatActivity {
                         sharedHelper.save(null, username, password, returnInt(role), null);
                     }
                     else {sharedHelper.save(null, null,null,"-1",null);}
-                    login(Login.this,username,password,returnInt(role));
-                    Constants.username=username;
+                    if (ButtonUtil.isFastClick()){
+                        login(Login.this,username,password,returnInt(role));
+                        Constants.username=username;
+                    }
                     break;
             }
         }
