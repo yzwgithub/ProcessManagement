@@ -84,6 +84,7 @@ public class MapActivity extends AppCompatActivity {
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
+		signInOrOut();
 		// 在使用SDK各组件之前初始化context信息，传入ApplicationContext
 		// 注意该方法要再setContentView方法之前实现
 		try {
@@ -344,7 +345,7 @@ public class MapActivity extends AppCompatActivity {
 				mBaiduMap.animateMapStatus(msu);
 				isFirstIn = false;
 				AlertDialog.Builder dialog=new AlertDialog.Builder(MapActivity.this);
-				dialog.setMessage("位置到获取"+getAddress()+"，是否确认签到？");
+				dialog.setMessage("位置到获取"+getAddress()+"，是否确认"+Constants.signIn+"?");
 				dialog.setPositiveButton("确定", new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
@@ -373,7 +374,7 @@ public class MapActivity extends AppCompatActivity {
 	public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
 		super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 		if (requestCode==123){
-			if (android.os.Build.VERSION.SDK_INT > android.os.Build.VERSION_CODES.M) {
+			if (android.os.Build.VERSION.SDK_INT >=android.os.Build.VERSION_CODES.M) {
 				boolean b=shouldShowRequestPermissionRationale(permission[0]);
 				if (!b){
 					Toast.makeText(MapActivity.this,"请手动设置定位权限",Toast.LENGTH_SHORT).show();
@@ -404,8 +405,9 @@ public class MapActivity extends AppCompatActivity {
 		StringRequest request=new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
 			@Override
 			public void onResponse(String s) {
-				Toast.makeText(context,Constants.signIn+"成功",Toast.LENGTH_SHORT).show();
-				Log.i("as","-----------------------------------------------------------");
+				if (s.equals("true")){
+					Toast.makeText(context,Constants.signIn+"成功",Toast.LENGTH_SHORT).show();
+				}else Toast.makeText(context,"今日已经"+Constants.signIn,Toast.LENGTH_SHORT).show();
 			}
 		}, new Response.ErrorListener() {
 			@Override

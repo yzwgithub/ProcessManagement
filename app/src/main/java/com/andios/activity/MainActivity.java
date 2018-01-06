@@ -1,15 +1,21 @@
 package com.andios.activity;
 
+import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 
 import com.andios.adapter.SectionsPagerAdapter;
+import com.andios.dao.DataOperate;
 import com.andios.fragment.DiscoverFragment;
 import com.andios.fragment.HomeFragment;
+import com.andios.util.Shared;
+import com.andios.util.SharedHelper;
 import com.ashokvarma.bottomnavigation.BottomNavigationBar;
 import com.ashokvarma.bottomnavigation.BottomNavigationItem;
 
@@ -28,8 +34,8 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationB
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getSupportActionBar().hide();
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
+//        getSupportActionBar().hide();
+//        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_main);
         initViewPager();
         initBottomNavigation();
@@ -102,5 +108,30 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationB
     }
     public static void fragmentUpdate(){
         adapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main,menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.action_item1:
+                DataOperate dataOperate=new DataOperate();
+                dataOperate.delAll(MainActivity.this);
+                adapter.notifyDataSetChanged();
+                break;
+            case R.id.action_item2:
+                SharedHelper sharedHelper=Shared.getInstance(MainActivity.this);
+                sharedHelper.save(null,null,null,"0",null);
+                Intent intent=new Intent(MainActivity.this,Login.class);
+                startActivity(intent);
+                MainActivity.this.finish();
+                break;
+        }
+        return true;
     }
 }

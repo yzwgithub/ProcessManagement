@@ -9,6 +9,12 @@ import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 
+import com.andios.util.Constants;
+import com.andios.util.Shared;
+import com.andios.util.SharedHelper;
+
+import java.util.Map;
+
 /**
  * Created by YangZheWen on 2017/10/23.
  * App启动动画
@@ -47,7 +53,12 @@ public class AppStart extends AppCompatActivity {
      * 实现页面跳转
      */
     protected void redirectTo() {
-        Intent intent = new Intent(this, Login.class);
+        Intent intent=new Intent();
+        SharedHelper sharedHelper= Shared.getInstance(AppStart.this);
+        Map<String,String>map=sharedHelper.read();
+        if (!map.get("username").equals("")&&!map.get("password").equals("")){
+            intent.setClass(this,MainActivity.class);
+        }else intent.setClass(this,Login.class);
         startActivity(intent);
         finish();
     }

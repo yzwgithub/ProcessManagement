@@ -23,6 +23,7 @@ import com.andios.dao.DataOperate;
 import com.andios.dao.HistoryHelper;
 import com.andios.interfaces.OnLongClickListener;
 import com.andios.util.Constants;
+import com.andios.util.Shared;
 import com.andios.util.SharedHelper;
 import com.andios.util.UserInfo;
 import com.android.volley.Request;
@@ -44,7 +45,6 @@ import java.util.Map;
 public class HomeFragment extends Fragment {
     private RecyclerViewAdapter adapter;
     private Cursor cursor;
-    private DataOperate dataOperate=new DataOperate();
     private String[] text,time,details;
     private SwipeRefreshLayout refreshLayout;
 
@@ -68,7 +68,7 @@ public class HomeFragment extends Fragment {
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                cursor=dataOperate.select(getContext());
+                cursor=Shared.getInstance().select(getContext());
                 queryPerson(getContext(),cursor.getCount());
                 refreshLayout.setRefreshing(false);
                 MainActivity.fragmentUpdate();
@@ -106,7 +106,7 @@ public class HomeFragment extends Fragment {
                 for (int i=0;i<list.size();i++){
                     userInfos[i]=list.get(i);
                     if (userInfos[i].getAfternoon()!=null) {
-                        dataOperate.insert(context, Constants.username, userInfos[i].getReal_name(), userInfos[i].getDate(), userInfos[i].getLocation());
+                        Shared.getInstance().insert(context, Constants.username, userInfos[i].getReal_name(), userInfos[i].getDate(), userInfos[i].getLocation());
                     }
                 }
             }
@@ -123,7 +123,7 @@ public class HomeFragment extends Fragment {
      * 初始化数据，从本地缓存中获取数据
      */
     private void initData(){
-        cursor=dataOperate.select_(getContext());
+        cursor=Shared.getInstance().select(getContext());
         text=new String[cursor.getCount()];
         time=new String[cursor.getCount()];
         details=new String[cursor.getCount()];
@@ -142,18 +142,10 @@ public class HomeFragment extends Fragment {
      * 从网络上获取个人签到记录
      */
     private void getData(){
-        cursor=dataOperate.select_(getContext());
+        cursor=Shared.getInstance().select(getContext());
         int count=cursor.getCount();
         if (count==0) {
             queryPerson(getContext(), count);
         }else return;
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        if (cursor.getCount()>100){
-            dataOperate.delAll(getContext());
-        }
     }
 }

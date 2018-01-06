@@ -14,4 +14,10 @@
         <item name="android:windowEnterAnimation">@anim/gd_grow_from_bottom</item>
         <item name="android:windowExitAnimation">@anim/gd_grow_from_top</item>
     </style>
+
+    <style name="ButtonStyle">
+
+        <item name="android:colorButtonNormal">#FFFFFF</item>
+        <item name="android:colorControlHighlight">#22000000</item>
+    </style>
 </resources>

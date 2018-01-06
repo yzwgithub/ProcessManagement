@@ -6,8 +6,8 @@
     <string name="login_button">登录</string>
     <string name="menu_search">搜索</string>
     <string name="menu_notifications">项目1</string>
-    <string name="item_01">项目2</string>
-    <string name="item_02">项目3</string>
+    <string name="item_01">清除缓存</string>
+    <string name="item_02">退出登录</string>
     <string name="sign">每日签到</string>
     <string name="work">填写项目代码</string>
     <string name="signIn">签到</string>

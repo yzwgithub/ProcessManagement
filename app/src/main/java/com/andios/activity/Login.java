@@ -101,6 +101,7 @@ public class Login extends AppCompatActivity {
                         login(Login.this,username,password,returnInt(role));
                         Constants.username=username;
                     }
+                    Login.this.finish();
                     break;
             }
         }
@@ -167,7 +168,6 @@ public class Login extends AppCompatActivity {
                 }
                 sharedHelper.save(loginInfo.getUser_id(), loginInfo.getUser_name(),
                         loginInfo.getPassword(), loginInfo.getRole(), loginInfo.getStatus());
-                //Toast.makeText(context,"登录成功！",Toast.LENGTH_SHORT).show();
                 Intent intent=new Intent(Login.this, MainActivity.class);
                 startActivity(intent);
             }

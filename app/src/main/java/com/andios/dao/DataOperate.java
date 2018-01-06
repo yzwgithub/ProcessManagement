@@ -31,7 +31,6 @@ public class DataOperate {
         History history=new History(context);
         SQLiteDatabase sqLiteDatabase=history.getWritableDatabase();
         ContentValues cv=new ContentValues();
-        //cv.put(HistoryHelper.ID,id);
         cv.put(HistoryHelper.IsGoToWork,iswork);
         cv.put(HistoryHelper.PROJECT_NAME,project_name);
         cv.put(HistoryHelper.TIME,date);
@@ -46,8 +45,6 @@ public class DataOperate {
      * @return
      */
     public Cursor select(Context context){
-        SharedHelper sharedHelper=new SharedHelper(context);
-        Map<String,String> data=sharedHelper.read();
         History history=new History(context);
         SQLiteDatabase sqLiteDatabase=history.getWritableDatabase();
         Cursor cursor=sqLiteDatabase.query(HistoryHelper.TABLE_NAME,null,/*HistoryHelper.IsGoToWork+"=?"*/null,
@@ -56,8 +53,6 @@ public class DataOperate {
     }
 
     public Cursor select_(Context context){
-        SharedHelper sharedHelper=new SharedHelper(context);
-        Map<String,String> data=sharedHelper.read();
         History history=new History(context);
         SQLiteDatabase sqLiteDatabase=history.getWritableDatabase();
         Cursor cursor=sqLiteDatabase.query(HistoryHelper.TABLE_NAME,null,HistoryHelper.IsGoToWork+"=?",

@@ -19,6 +19,7 @@ import com.andios.activity.R;
 import com.andios.util.ButtonUtil;
 import com.andios.util.Constants;
 import com.andios.util.ProjectInfo;
+import com.andios.util.Shared;
 import com.andios.util.SharedHelper;
 import com.andios.util.UserInfo;
 import com.android.volley.Request;
@@ -49,7 +50,6 @@ public class DiscoverFragment extends Fragment implements View.OnClickListener {
     private TextView Y_details;
     private TextView J_details;
     private Spinner editText;
-    private SharedHelper sharedHelper;
 
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
@@ -66,15 +66,8 @@ public class DiscoverFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        Shared.getInstance(getContext());
         initView();
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        sharedHelper=new SharedHelper(getContext());
-        sharedHelper.save("0");
-        queryPerson(getContext(),0);
     }
 
     /**
@@ -123,8 +116,7 @@ public class DiscoverFragment extends Fragment implements View.OnClickListener {
      */
     @Override
     public void onClick(View v) {
-        sharedHelper=new SharedHelper(getContext());
-        Map<String,String>data_=sharedHelper.read_();
+        Map<String,String>data_=Shared.getInstance(getContext()).read_();
         switch(v.getId()){
             case R.id.signIn:
                 if (editText.getSelectedItem().toString().equals("无项目")){
@@ -161,7 +153,7 @@ public class DiscoverFragment extends Fragment implements View.OnClickListener {
                 break;
             case R.id.Z_details:
                 if (ButtonUtil.isFastClick()){
-                    sharedHelper.save("0");
+                    Shared.getInstance(getContext()).save("0");
                     for (int i=0;i<10;i=i+5){
                         queryPerson(getContext(),i);
                     }
@@ -170,7 +162,7 @@ public class DiscoverFragment extends Fragment implements View.OnClickListener {
                 break;
             case R.id.Y_details:
                 if (ButtonUtil.isFastClick()) {
-                    sharedHelper.save("0");
+                    Shared.getInstance(getContext()).save("0");
                     for (int i = 0; i < 30; i = i + 5) {
                         queryPerson(getContext(), i);
                     }
@@ -179,7 +171,7 @@ public class DiscoverFragment extends Fragment implements View.OnClickListener {
                 break;
             case R.id.J_details:
                 if (ButtonUtil.isFastClick()) {
-                    sharedHelper.save("0");
+                    Shared.getInstance(getContext()).save("0");
                     for (int i=0;i<90;i=i+5){
                         queryPerson(getContext(),i);
                     }
@@ -203,8 +195,7 @@ public class DiscoverFragment extends Fragment implements View.OnClickListener {
      * @param start
      */
     private void queryPerson(final Context context,int start){
-        sharedHelper=new SharedHelper(context);
-        Map<String,String> data=sharedHelper.read();
+        Map<String,String> data=Shared.getInstance(getContext()).read();
         final String url= Constants.url+"attendance/queryPerson?user_id="+data.get("user_id")+"&start="+start;
         StringRequest request=new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             @Override
@@ -236,8 +227,7 @@ public class DiscoverFragment extends Fragment implements View.OnClickListener {
      * @return
      */
     private void queryProject(final Context context){
-        sharedHelper=new SharedHelper(context);
-        Map<String,String>data=sharedHelper.read();
+        Map<String,String>data=Shared.getInstance(getContext()).read();
         final String url=Constants.url+"phone/queryProjectByUser?user_id="+data.get("user_id");
         StringRequest request=new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             @Override
