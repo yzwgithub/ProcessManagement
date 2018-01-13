@@ -1,6 +1,9 @@
 package com.andios.activity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -8,6 +11,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
+import android.widget.Toast;
 
 import com.andios.util.Constants;
 import com.andios.util.Shared;
@@ -26,9 +30,11 @@ public class AppStart extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         getSupportActionBar().hide();
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        isNetworkConnected(AppStart.this);
         final View view = View.inflate(AppStart.this,R.layout.start_app, null);
         setContentView(view);
         alphaAnimation(view);
+        Toast.makeText(this, "当前网络不可用，请检查网络设置！", Toast.LENGTH_SHORT).show();
     }
 
     /**
@@ -61,5 +67,17 @@ public class AppStart extends AppCompatActivity {
         }else intent.setClass(this,Login.class);
         startActivity(intent);
         finish();
+    }
+
+    private boolean isNetworkConnected(Context context){
+        if (context!=null){
+            ConnectivityManager manager= (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo info=manager.getActiveNetworkInfo();
+            if (info!=null){
+                Constants.isNetworkConnected=info.isAvailable();
+                return info.isAvailable();
+            }
+        }
+        return false;
     }
 }

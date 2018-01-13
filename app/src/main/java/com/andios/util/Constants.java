@@ -11,4 +11,5 @@ public class Constants {
     public static int signInOrOut=0;
     public static String signInlocation=null;
     public static final String url="http://192.168.1.105:8080/";
+    public static boolean isNetworkConnected=false;
 }
