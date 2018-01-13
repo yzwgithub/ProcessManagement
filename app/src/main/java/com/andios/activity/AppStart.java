@@ -34,7 +34,9 @@ public class AppStart extends AppCompatActivity {
         final View view = View.inflate(AppStart.this,R.layout.start_app, null);
         setContentView(view);
         alphaAnimation(view);
-        Toast.makeText(this, "当前网络不可用，请检查网络设置！", Toast.LENGTH_SHORT).show();
+        if (!Constants.isNetworkConnected){
+            Toast.makeText(this, "当前网络不可用，请检查网络设置！", Toast.LENGTH_SHORT).show();
+        }
     }
 
     /**

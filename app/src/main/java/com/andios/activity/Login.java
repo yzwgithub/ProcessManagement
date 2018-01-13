@@ -101,7 +101,6 @@ public class Login extends AppCompatActivity {
                         login(Login.this,username,password,returnInt(role));
                         Constants.username=username;
                     }
-                    Login.this.finish();
                     break;
             }
         }
@@ -170,6 +169,7 @@ public class Login extends AppCompatActivity {
                         loginInfo.getPassword(), loginInfo.getRole(), loginInfo.getStatus());
                 Intent intent=new Intent(Login.this, MainActivity.class);
                 startActivity(intent);
+                Login.this.finish();
             }
         }, new Response.ErrorListener() {
             @Override
